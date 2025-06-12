@@ -43,10 +43,10 @@ const MessageInput = ({ onSend, isLoading, maxLength = 500 }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1 w-full">
       <div className="relative">
         <textarea
-          className="w-full min-h-[48px] max-h-32 resize-y rounded-md border border-gray-300 p-2 pr-20 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
+          className="w-full min-h-[44px] max-h-32 resize-y rounded-xl border border-gray-300 p-3 pr-20 text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100 transition"
           placeholder="Type your message..."
           value={input}
           onChange={handleChange}
@@ -55,7 +55,7 @@ const MessageInput = ({ onSend, isLoading, maxLength = 500 }) => {
           maxLength={maxLength}
         />
         <button
-          className="absolute bottom-2 right-2 bg-blue-500 text-white px-3 py-1 rounded disabled:bg-blue-300"
+          className="absolute bottom-3 right-3 bg-primary-600 text-white px-4 py-1.5 rounded-lg font-semibold shadow hover:bg-primary-700 disabled:bg-primary-300 transition"
           onClick={handleSend}
           disabled={isLoading || !input.trim()}
           aria-label="Send message"
@@ -63,9 +63,9 @@ const MessageInput = ({ onSend, isLoading, maxLength = 500 }) => {
           Send
         </button>
       </div>
-      <div className="flex justify-between text-xs text-gray-500">
-        <span>{input.length}/{maxLength} characters</span>
-        {error && <span className="text-red-500">{error}</span>}
+      <div className="flex justify-between text-xs mt-1">
+        <span className="text-gray-400">{input.length}/{maxLength} characters</span>
+        {error && <span className="text-red-500 font-medium">{error}</span>}
       </div>
     </div>
   );

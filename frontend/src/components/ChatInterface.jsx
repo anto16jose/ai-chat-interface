@@ -25,29 +25,28 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm p-4">
-        <h1 className="text-xl font-semibold text-gray-800">AI Chat Interface</h1>
+      <header className="w-full bg-white shadow-sm px-4 py-3 md:px-8 md:py-4 border-b border-gray-200">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">AI Chat Interface</h1>
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* Chat Area - Takes full width on mobile, 2/3 on desktop */}
-        <div className="flex-1 flex flex-col h-full md:w-2/3">
-          {/* Messages will go here */}
-          <div className="flex-1 overflow-y-auto p-4">
+      <main className="flex-1 flex flex-col md:flex-row md:items-stretch max-w-5xl w-full mx-auto md:mt-8 md:rounded-xl md:shadow-lg md:bg-white md:overflow-hidden">
+        {/* Chat Area - Mobile: full, Desktop: 2/3 */}
+        <section className="flex-1 flex flex-col h-full md:w-2/3 bg-white md:bg-transparent">
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto px-2 py-4 sm:px-4 md:px-6">
             <MessageList messages={messages} />
           </div>
-
-          {/* Input area will go here */}
-          <div className="border-t border-gray-200 p-4 bg-white">
+          {/* Input */}
+          <div className="border-t border-gray-200 px-2 py-3 sm:px-4 md:px-6 bg-white">
             <MessageInput onSend={handleSendMessage} isLoading={isLoading} />
           </div>
-        </div>
+        </section>
 
-        {/* Settings Panel - Hidden on mobile, 1/3 on desktop */}
-        <div className="hidden md:block w-1/3 border-l border-gray-200 bg-white p-4">
+        {/* Settings Panel - Mobile: hidden, Desktop: sidebar */}
+        <aside className="hidden md:flex md:flex-col md:w-1/3 border-l border-gray-100 bg-gray-50 p-6">
           <SettingsPanel
             apiKey={apiKey}
             onApiKeyChange={setApiKey}
@@ -56,18 +55,18 @@ const ChatInterface = () => {
             demoMode={demoMode}
             onDemoModeToggle={() => setDemoMode((v) => !v)}
           />
-        </div>
+        </aside>
       </main>
 
       {/* Loading and Error States */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg shadow-lg">Loading...</div>
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white px-6 py-4 rounded-lg shadow-lg text-lg font-medium">Loading...</div>
         </div>
       )}
 
       {error && (
-        <div className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <div className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-lg z-50">
           {error}
         </div>
       )}

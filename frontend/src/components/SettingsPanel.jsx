@@ -42,13 +42,13 @@ const SettingsPanel = ({
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full max-w-md mx-auto md:mx-0">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">OpenAI API Key</label>
+        <label className="block text-xs font-semibold text-gray-600 mb-1">OpenAI API Key</label>
         <div className="relative flex items-center">
           <input
             type={showKey ? 'text' : 'password'}
-            className="w-full rounded border border-gray-300 p-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full rounded-lg border border-gray-300 p-2 pr-16 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100"
             placeholder="sk-..."
             value={apiKey}
             onChange={handleKeyChange}
@@ -57,21 +57,21 @@ const SettingsPanel = ({
           />
           <button
             type="button"
-            className="absolute right-2 text-xs text-blue-500 hover:underline"
+            className="absolute right-2 text-xs text-primary-600 hover:underline font-semibold"
             onClick={() => setShowKey((v) => !v)}
             tabIndex={-1}
           >
             {showKey ? 'Hide' : 'Show'}
           </button>
         </div>
-        {keyError && <div className="text-xs text-red-500 mt-1">{keyError}</div>}
-        {demoMode && <div className="text-xs text-blue-500 mt-1">Demo mode enabled: API key disabled</div>}
+        {keyError && <div className="text-xs text-red-500 mt-1 font-medium">{keyError}</div>}
+        {demoMode && <div className="text-xs text-primary-600 mt-1 font-medium">Demo mode enabled: API key disabled</div>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
+        <label className="block text-xs font-semibold text-gray-600 mb-1">Model</label>
         <select
-          className="w-full rounded border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100"
           value={model}
           onChange={(e) => onModelChange(e.target.value)}
           disabled={demoMode}
@@ -82,11 +82,11 @@ const SettingsPanel = ({
         </select>
       </div>
 
-      <div className="flex items-center gap-2">
-        <label className="font-medium text-sm text-gray-700">Demo Mode</label>
+      <div className="flex items-center gap-3 mt-2">
+        <label className="font-semibold text-xs text-gray-600">Demo Mode</label>
         <button
           type="button"
-          className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${demoMode ? 'bg-blue-500' : 'bg-gray-300'}`}
+          className={`relative w-12 h-6 rounded-full transition-colors duration-200 outline-none ring-2 ring-primary-200 ${demoMode ? 'bg-primary-500' : 'bg-gray-300'}`}
           onClick={onDemoModeToggle}
           aria-pressed={demoMode}
         >
@@ -94,7 +94,7 @@ const SettingsPanel = ({
             className={`absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${demoMode ? 'translate-x-6' : ''}`}
           />
         </button>
-        <span className="text-xs text-gray-500">(Try the app without an API key)</span>
+        <span className="text-xs text-gray-400">(Try the app without an API key)</span>
       </div>
     </div>
   );

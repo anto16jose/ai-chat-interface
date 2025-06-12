@@ -1,0 +1,210 @@
+# Cursor Rules - AI Chat Interface Project
+
+## Core Project Context
+You are working on the DLBCSPJWD01 portfolio assignment - an AI Chat Interface where users provide their own OpenAI API keys for privacy-first chat functionality. This is Phase 2 (Development & Presentation) of a 3-phase academic project.
+
+## MANDATORY REFERENCE BEHAVIOR
+- **ALWAYS reference the `instructions/` directory** before starting any task
+- **READ the development checklist** (`instructions/checklist.md`) to understand current priorities
+- **UPDATE the checklist** by marking items as complete `[x]` when you finish implementing features
+- **Follow the assignment requirements** specified in `instructions/assignement_requirements.md`
+- **Use the implementation guidance** from `instructions/claude_guidelines.md`
+
+## PROJECT STRUCTURE ENFORCEMENT
+```
+ai-chat-interface/
+├── frontend/                 # React + Vite + Tailwind
+│   ├── src/
+│   │   ├── components/       # React components
+│   │   ├── hooks/           # Custom React hooks  
+│   │   ├── utils/           # Utility functions
+│   │   ├── App.jsx          # Root component
+│   │   └── main.jsx         # Vite entry point
+├── backend/                 # Express API server
+│   ├── routes/              # API route definitions
+│   ├── middleware/          # Express middleware
+│   ├── utils/               # Backend utilities
+│   └── server.js            # Main server file
+├── docs/                    # Documentation
+├── instructions/            # Project instructions (READ ONLY)
+└── README.md               # Main project documentation
+```
+
+## CODE QUALITY STANDARDS
+
+### React/Frontend Rules:
+- **Functional components ONLY** with React hooks
+- **Tailwind CSS ONLY** - no custom CSS files or styled-components
+- **Mobile-first responsive design** - always test mobile viewport
+- **JSDoc comments** for every component and function
+- **Props destructuring** with default values
+- **Error boundaries** for stability
+- **Loading states** for all async operations
+
+### Backend/Express Rules:
+- **RESTful API design** with proper HTTP status codes
+- **Middleware pattern** - modular, reusable functions
+- **Input validation** on ALL endpoints
+- **Comprehensive error handling** with user-friendly messages
+- **Security first** - never expose API keys to frontend
+- **Rate limiting** and CORS protection
+
+### Security Requirements:
+- **API keys NEVER in frontend** - backend proxy pattern only
+- **Session-based credentials** - never store permanently
+- **Input sanitization** to prevent injection attacks
+- **No sensitive data in error messages**
+- **HTTPS-ready** configuration
+
+## IMPLEMENTATION PRIORITIES
+
+### Current Focus Order:
+1. **Follow checklist sequence** - don't skip ahead
+2. **Quality gates** - complete each section fully before proceeding
+3. **Demo mode is CRITICAL** - must work for evaluation without API keys
+4. **Responsive design** - test on mobile viewport constantly
+5. **Documentation as you code** - comments and README updates
+
+### Assignment Requirements (NEVER FORGET):
+- ✅ **Two dynamic aspects**: Real-time chat + Settings management
+- ✅ **Responsive design**: Mobile-first with Tailwind CSS
+- ✅ **Frontend-backend communication**: RESTful API
+- ✅ **Functioning application**: NOT mockups - must actually work
+- ✅ **Demo mode**: Tutors can evaluate without API keys
+- ✅ **GitHub repository**: Professional, complete, public
+
+## COMPONENT IMPLEMENTATION RULES
+
+### ChatInterface.jsx:
+- Main container with responsive layout
+- State management for messages, settings, UI states
+- Mobile: stack layout, Desktop: sidebar layout
+- Loading states and error displays
+
+### MessageList.jsx:
+- Message bubbles with proper styling
+- Auto-scroll to latest message
+- Handle empty state gracefully
+- Markdown rendering support
+
+### MessageInput.jsx:
+- Textarea with submit button
+- Enter key submission (Shift+Enter for new line)
+- Character limit display
+- Disable during loading
+
+### SettingsPanel.jsx:
+- API key input (password type) with validation
+- Model selection dropdown (GPT-3.5-turbo, GPT-4)
+- Demo mode toggle (prominent for evaluation)
+- Responsive: drawer on mobile, sidebar on desktop
+
+## BACKEND IMPLEMENTATION RULES
+
+### API Endpoints Required:
+```
+POST /api/chat          # Main chat functionality
+POST /api/validate-key  # API key validation
+GET /api/demo          # Demo responses (CRITICAL)
+GET /api/models        # Available models
+```
+
+### Security Middleware Stack:
+- CORS (allow frontend origin)
+- Helmet (security headers)
+- Rate limiting (prevent abuse)
+- Input validation (prevent injection)
+- Error handling (no sensitive data exposure)
+
+## GIT AND DOCUMENTATION RULES
+
+### Commit Standards:
+- **Descriptive messages**: "feat: implement ChatInterface responsive layout"
+- **Frequent commits**: After completing each checklist item
+- **Clean history**: Squash trivial commits before final submission
+
+### Documentation Requirements:
+- **Update README.md** with installation instructions
+- **Document architectural decisions** as you make them
+- **Comment complex logic** thoroughly
+- **Update checklist** immediately when completing items
+
+## TESTING AND VALIDATION
+
+### Before Marking Checklist Items Complete:
+- **Component renders** without console errors
+- **Responsive design** works on mobile viewport
+- **State management** functions correctly
+- **Error handling** is implemented
+- **Code is documented** with comments
+
+### Quality Gates (MUST PASS):
+1. **Frontend Foundation**: All components render, responsive works
+2. **Backend Foundation**: Server runs, demo mode works
+3. **Full Integration**: Frontend-backend communication works
+4. **Assignment Ready**: All requirements met, presentation ready
+
+## DEMO MODE REQUIREMENTS (CRITICAL)
+
+### Demo Mode Must:
+- **Work independently** without OpenAI API keys
+- **Simulate realistic conversations** (coding help, general questions)
+- **Handle different scenarios** (errors, various topics)
+- **Be easily toggleable** for evaluators
+- **Cover all chat functionality** without external dependencies
+
+### Demo Response Examples:
+- Coding assistance responses
+- General knowledge answers
+- Error handling scenarios
+- Different conversation flows
+
+## EMERGENCY PROTOCOLS
+
+### If Issues Arise:
+- **Document problems** in commit messages and README
+- **Maintain demo mode** as primary evaluation method
+- **Keep working features** functional while debugging
+- **Ask for help** via comments in code if needed
+
+### Time Management:
+- **Focus on functioning over perfect** - working demo beats perfect UI
+- **Prioritize assignment requirements** over additional features
+- **Maintain quality gates** - don't proceed with broken foundations
+
+## FILE NAMING AND ORGANIZATION
+
+### Frontend:
+- **Components**: PascalCase (ChatInterface.jsx)
+- **Hooks**: camelCase with 'use' prefix (useChat.js)
+- **Utils**: camelCase (api.js, constants.js)
+
+### Backend:
+- **Routes**: camelCase (chat.js)
+- **Middleware**: camelCase (rateLimiter.js)
+- **Utils**: camelCase (openai.js, demo.js)
+
+## CHECKLIST UPDATE PROTOCOL
+
+### When Completing Items:
+1. **Mark as complete**: Change `[ ]` to `[x]`
+2. **Add completion notes** if necessary
+3. **Update progress** in commit message
+4. **Verify quality gate** requirements
+
+### Example Update:
+```markdown
+- [x] Create ChatInterface.jsx with responsive layout
+- [x] Implement MessageList.jsx with proper styling
+- [ ] Create MessageInput.jsx with validation
+```
+
+## IMMEDIATE NEXT STEPS
+
+Based on current progress, continue with:
+1. **Complete README.md** creation (current checklist priority)
+2. **Document architecture decisions** 
+3. **Set up Git commit standards**
+4. **Begin React component implementation**
+
+Remember: **Quality over speed** - a working application that meets assignment requirements is better than a complex application that doesn't function properly.

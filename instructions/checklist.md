@@ -56,12 +56,12 @@
 - [ ] Test with mock message data
 
 #### MessageInput.jsx (User Input)
-- [ ] Create textarea with submit button
-- [ ] Handle Enter key submission (Shift+Enter for new line)
-- [ ] Add character/token limit display
-- [ ] Implement loading state (disable during API calls)
+- [x] Create textarea with submit button
+- [x] Handle Enter key submission (Shift+Enter for new line)
+- [x] Add character/token limit display
+- [x] Implement loading state (disable during API calls)
 - [ ] Clear input after successful submission
-- [ ] Add input validation and error handling
+- [x] Add input validation and error handling
 
 #### SettingsPanel.jsx (Configuration)
 - [ ] Create API key input field (password type)

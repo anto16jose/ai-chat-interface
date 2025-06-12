@@ -8,12 +8,17 @@
  */
 import { useState } from 'react';
 import MessageList from './MessageList';
+import MessageInput from './MessageInput';
 
 const ChatInterface = () => {
   // State management for messages and settings
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const handleSendMessage = (text) => {
+    setMessages((prev) => [...prev, { role: 'user', content: text }]);
+  };
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
@@ -33,7 +38,7 @@ const ChatInterface = () => {
 
           {/* Input area will go here */}
           <div className="border-t border-gray-200 p-4 bg-white">
-            <div className="text-gray-500">Message input will go here</div>
+            <MessageInput onSend={handleSendMessage} isLoading={isLoading} />
           </div>
         </div>
 

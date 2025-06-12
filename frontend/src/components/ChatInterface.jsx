@@ -7,6 +7,7 @@
  * @returns {JSX.Element} The rendered chat interface component
  */
 import { useState } from 'react';
+import MessageList from './MessageList';
 
 const ChatInterface = () => {
   // State management for messages and settings
@@ -27,13 +28,7 @@ const ChatInterface = () => {
         <div className="flex-1 flex flex-col h-full md:w-2/3">
           {/* Messages will go here */}
           <div className="flex-1 overflow-y-auto p-4">
-            {messages.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-gray-500">
-                No messages yet. Start a conversation!
-              </div>
-            ) : (
-              <div>Messages will be displayed here</div>
-            )}
+            <MessageList messages={messages} />
           </div>
 
           {/* Input area will go here */}

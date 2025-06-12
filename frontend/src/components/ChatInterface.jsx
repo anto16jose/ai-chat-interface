@@ -1,10 +1,7 @@
 /**
  * ChatInterface.jsx
- * Main container component for the chat application.
- * Handles the overall layout and state management for the chat interface.
- * 
- * @component
- * @returns {JSX.Element} The rendered chat interface component
+ * Main container for the AI Chat Interface app.
+ * Handles layout, state, and integration of all chat UI components.
  */
 import { useState } from 'react';
 import MessageList from './MessageList';
@@ -12,7 +9,6 @@ import MessageInput from './MessageInput';
 import SettingsPanel from './SettingsPanel';
 
 const ChatInterface = () => {
-  // State management for messages and settings
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

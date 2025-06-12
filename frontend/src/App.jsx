@@ -1,18 +1,12 @@
 /**
- * App.jsx
- * Root component of the application.
- * 
- * @component
- * @returns {JSX.Element} The rendered application
+ * @file App.jsx
+ * @description Root component for the AI Chat Interface application
  */
+
 import ChatInterface from './components/ChatInterface';
 
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <ChatInterface />
-    </div>
-  );
+  return <ChatInterface />;
 }
 
-export default App;
+export default App; 

@@ -20,9 +20,6 @@ export default {
           900: '#0c4a6e',
         },
       },
-      fontFamily: {
-        sans: ['Inter var', 'sans-serif'],
-      },
     },
   },
   plugins: [],

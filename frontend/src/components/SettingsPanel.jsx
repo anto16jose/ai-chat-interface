@@ -48,7 +48,7 @@ const SettingsPanel = ({
         <div className="relative flex items-center">
           <input
             type={showKey ? 'text' : 'password'}
-            className="w-full rounded-lg border border-gray-300 p-2 pr-16 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100"
+            className="w-full rounded-lg border border-gray-300 p-2 pr-16 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
             placeholder="sk-..."
             value={apiKey}
             onChange={handleKeyChange}
@@ -57,7 +57,7 @@ const SettingsPanel = ({
           />
           <button
             type="button"
-            className="absolute right-2 text-xs text-primary-600 hover:underline font-semibold"
+            className="absolute right-2 text-xs text-blue-600 hover:underline font-semibold"
             onClick={() => setShowKey((v) => !v)}
             tabIndex={-1}
           >
@@ -65,13 +65,13 @@ const SettingsPanel = ({
           </button>
         </div>
         {keyError && <div className="text-xs text-red-500 mt-1 font-medium">{keyError}</div>}
-        {demoMode && <div className="text-xs text-primary-600 mt-1 font-medium">Demo mode enabled: API key disabled</div>}
+        {demoMode && <div className="text-xs text-blue-600 mt-1 font-medium">Demo mode enabled: API key disabled</div>}
       </div>
 
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1">Model</label>
         <select
-          className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100"
+          className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
           value={model}
           onChange={(e) => onModelChange(e.target.value)}
           disabled={demoMode}
@@ -86,7 +86,7 @@ const SettingsPanel = ({
         <label className="font-semibold text-xs text-gray-600">Demo Mode</label>
         <button
           type="button"
-          className={`relative w-12 h-6 rounded-full transition-colors duration-200 outline-none ring-2 ring-primary-200 ${demoMode ? 'bg-primary-500' : 'bg-gray-300'}`}
+          className={`relative w-12 h-6 rounded-full transition-colors duration-200 outline-none ring-2 ring-blue-200 ${demoMode ? 'bg-blue-500' : 'bg-gray-300'}`}
           onClick={onDemoModeToggle}
           aria-pressed={demoMode}
         >

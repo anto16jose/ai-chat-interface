@@ -46,7 +46,7 @@ const MessageInput = ({ onSend, isLoading, maxLength = 500 }) => {
     <div className="flex flex-col gap-1 w-full">
       <div className="relative">
         <textarea
-          className="w-full min-h-[44px] max-h-32 resize-y rounded-xl border border-gray-300 p-3 pr-20 text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100 transition"
+          className="w-full min-h-[44px] max-h-32 resize-y rounded-xl border border-gray-300 p-3 pr-20 text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 transition"
           placeholder="Type your message..."
           value={input}
           onChange={handleChange}
@@ -55,7 +55,7 @@ const MessageInput = ({ onSend, isLoading, maxLength = 500 }) => {
           maxLength={maxLength}
         />
         <button
-          className="absolute bottom-3 right-3 bg-primary-600 text-white px-4 py-1.5 rounded-lg font-semibold shadow hover:bg-primary-700 disabled:bg-primary-300 transition"
+          className="absolute bottom-3 right-3 bg-blue-600 text-white px-4 py-1.5 rounded-lg font-semibold shadow hover:bg-blue-700 disabled:bg-blue-300 transition"
           onClick={handleSend}
           disabled={isLoading || !input.trim()}
           aria-label="Send message"

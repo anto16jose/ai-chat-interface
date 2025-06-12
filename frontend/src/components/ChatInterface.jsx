@@ -7,6 +7,7 @@ import { useState } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import SettingsPanel from './SettingsPanel';
+import { Cog6ToothIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
@@ -15,6 +16,7 @@ const ChatInterface = () => {
   const [apiKey, setApiKey] = useState('');
   const [model, setModel] = useState('gpt-3.5-turbo');
   const [demoMode, setDemoMode] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleSendMessage = (text) => {
     setMessages((prev) => [...prev, { role: 'user', content: text }]);
@@ -23,8 +25,16 @@ const ChatInterface = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="w-full bg-white shadow-sm px-4 py-3 md:px-8 md:py-4 border-b border-gray-200">
+      <header className="w-full bg-white shadow-sm px-4 py-3 md:px-8 md:py-4 border-b border-gray-200 flex items-center justify-between">
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">AI Chat Interface</h1>
+        {/* Settings button for mobile */}
+        <button
+          className="md:hidden p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400"
+          aria-label="Open settings"
+          onClick={() => setDrawerOpen(true)}
+        >
+          <Cog6ToothIcon className="h-6 w-6 text-gray-700" />
+        </button>
       </header>
 
       {/* Main Content Area */}
@@ -41,7 +51,7 @@ const ChatInterface = () => {
           </div>
         </section>
 
-        {/* Settings Panel - Mobile: hidden, Desktop: sidebar */}
+        {/* Settings Panel - Desktop sidebar */}
         <aside className="hidden md:flex md:flex-col md:w-1/3 border-l border-gray-100 bg-gray-50 p-6">
           <SettingsPanel
             apiKey={apiKey}
@@ -53,6 +63,40 @@ const ChatInterface = () => {
           />
         </aside>
       </main>
+
+      {/* Mobile Settings Drawer */}
+      {drawerOpen && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-30 z-40 transition-opacity duration-200"
+            onClick={() => setDrawerOpen(false)}
+            aria-label="Close settings drawer"
+            tabIndex={-1}
+          />
+          {/* Drawer */}
+          <div className="fixed top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-lg z-50 flex flex-col p-6 transition-transform duration-300 transform translate-x-0">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-800">Settings</h2>
+              <button
+                className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400"
+                aria-label="Close settings"
+                onClick={() => setDrawerOpen(false)}
+              >
+                <XMarkIcon className="h-6 w-6 text-gray-700" />
+              </button>
+            </div>
+            <SettingsPanel
+              apiKey={apiKey}
+              onApiKeyChange={setApiKey}
+              model={model}
+              onModelChange={setModel}
+              demoMode={demoMode}
+              onDemoModeToggle={() => setDemoMode((v) => !v)}
+            />
+          </div>
+        </>
+      )}
 
       {/* Loading and Error States */}
       {isLoading && (

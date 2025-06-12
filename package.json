@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.10"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.2.0"
   }
 }

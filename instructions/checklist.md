@@ -64,11 +64,11 @@
 - [x] Add input validation and error handling
 
 #### SettingsPanel.jsx (Configuration)
-- [ ] Create API key input field (password type)
-- [ ] Add model selection dropdown (GPT-3.5-turbo, GPT-4)
-- [ ] Implement demo mode toggle switch
-- [ ] Make responsive (drawer on mobile, sidebar on desktop)
-- [ ] Add real-time validation feedback
+- [x] Create API key input field (password type)
+- [x] Add model selection dropdown (GPT-3.5-turbo, GPT-4)
+- [x] Implement demo mode toggle switch
+- [x] Make responsive (drawer on mobile, sidebar on desktop)
+- [x] Add real-time validation feedback
 - [ ] Handle settings persistence (session-based)
 
 ### Phase B: State Management & Integration

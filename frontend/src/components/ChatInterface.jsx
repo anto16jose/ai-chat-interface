@@ -9,12 +9,16 @@
 import { useState } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
+import SettingsPanel from './SettingsPanel';
 
 const ChatInterface = () => {
   // State management for messages and settings
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [apiKey, setApiKey] = useState('');
+  const [model, setModel] = useState('gpt-3.5-turbo');
+  const [demoMode, setDemoMode] = useState(false);
 
   const handleSendMessage = (text) => {
     setMessages((prev) => [...prev, { role: 'user', content: text }]);
@@ -44,7 +48,14 @@ const ChatInterface = () => {
 
         {/* Settings Panel - Hidden on mobile, 1/3 on desktop */}
         <div className="hidden md:block w-1/3 border-l border-gray-200 bg-white p-4">
-          <div className="text-gray-500">Settings panel will go here</div>
+          <SettingsPanel
+            apiKey={apiKey}
+            onApiKeyChange={setApiKey}
+            model={model}
+            onModelChange={setModel}
+            demoMode={demoMode}
+            onDemoModeToggle={() => setDemoMode((v) => !v)}
+          />
         </div>
       </main>
 

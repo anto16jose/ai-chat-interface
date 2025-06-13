@@ -7,7 +7,7 @@ import { useState } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import SettingsPanel from './SettingsPanel';
-import { Cog6ToothIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Cog6ToothIcon, XMarkIcon } from '@heroicons/react/outline';
 import useChat from '../hooks/useChat';
 
 const ChatInterface = () => {

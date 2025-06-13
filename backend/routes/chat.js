@@ -1,6 +1,7 @@
 /**
  * chat.js
  * API routes for chat functionality.
+ * Handles message processing, API key validation, and model information.
  */
 const express = require('express');
 const router = express.Router();
@@ -10,6 +11,20 @@ const { validateApiKey, getChatCompletion, getDemoResponse } = require('../utils
 /**
  * POST /api/chat
  * Send a message and get AI response
+ * 
+ * Request body:
+ * @param {string} message - The user's message to process
+ * @param {string} model - The OpenAI model to use (gpt-3.5-turbo or gpt-4)
+ * @param {string} apiKey - OpenAI API key (required if demoMode is false)
+ * @param {boolean} demoMode - Whether to use demo responses
+ * 
+ * Response:
+ * @returns {Object} JSON response
+ * @returns {string} response.content - The AI's response message
+ * @returns {Object} [response.error] - Error details (development only)
+ * 
+ * @throws {400} Bad Request - Invalid request format
+ * @throws {500} Server Error - OpenAI API error or processing failure
  */
 router.post('/chat', validateChatRequest, async (req, res) => {
   try {
@@ -36,6 +51,17 @@ router.post('/chat', validateChatRequest, async (req, res) => {
 /**
  * POST /api/validate-key
  * Validate OpenAI API key
+ * 
+ * Request body:
+ * @param {string} apiKey - OpenAI API key to validate
+ * 
+ * Response:
+ * @returns {Object} JSON response
+ * @returns {boolean} response.valid - Whether the API key is valid
+ * @returns {Object} [response.error] - Error details (development only)
+ * 
+ * @throws {400} Bad Request - Invalid request format
+ * @throws {500} Server Error - Validation process failure
  */
 router.post('/validate-key', validateKeyRequest, async (req, res) => {
   try {
@@ -54,6 +80,12 @@ router.post('/validate-key', validateKeyRequest, async (req, res) => {
 /**
  * GET /api/models
  * Get available OpenAI models
+ * 
+ * Response:
+ * @returns {Object} JSON response
+ * @returns {Array<Object>} response.models - List of available models
+ * @returns {string} response.models[].id - Model identifier
+ * @returns {string} response.models[].name - Human-readable model name
  */
 router.get('/models', (req, res) => {
   res.json({

@@ -4,7 +4,7 @@
 [![Course](https://img.shields.io/badge/Course-DLBCSPJWD01-green)](https://github.com/NikVince/ai-chat-interface)
 [![Assignment](https://img.shields.io/badge/Assignment-Portfolio%20Project-orange)](https://github.com/NikVince/ai-chat-interface)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Phase](https://img.shields.io/badge/Development%20Phase-1%20of%203-red)](https://github.com/NikVince/ai-chat-interface)
+[![Phase](https://img.shields.io/badge/Development%20Phase-2%20of%203-yellow)](https://github.com/NikVince/ai-chat-interface)
 
 ## 📚 Academic Context
 
@@ -86,7 +86,14 @@ This project demonstrates mastery of:
 ### Phase 2: Development & Presentation 🔄
 - **Deliverable**: 10-slide presentation + GitHub repository + 2-min demo
 - **Focus**: Core implementation, documentation, working prototype
-- **Status**: In Progress
+- **Status**: In Progress (MVP Complete)
+  - ✅ Core chat functionality implemented
+  - ✅ Settings management working
+  - ✅ Demo mode available for evaluation
+  - ✅ Responsive design implemented
+  - 🔄 Documentation in progress
+  - 🔄 Presentation materials pending
+  - 🔄 Final testing and polish needed
 
 ### Phase 3: Finalization 📋
 - **Deliverable**: 2-page abstract + final submission + complete documentation
@@ -118,3 +125,97 @@ This project represents original work completed as part of the IU International 
 ---
 
 **Note**: This README will be updated throughout the development phases to include implementation details, setup instructions, and deployment guidelines as the project progresses.
+
+## 🛠️ Installation & Setup
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm (v8 or higher)
+- OpenAI API key (optional, demo mode available)
+
+### Quick Start
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/NikVince/ai-chat-interface.git
+   cd ai-chat-interface
+   ```
+
+2. Install dependencies:
+   ```bash
+   # Install root dependencies
+   npm install
+   
+   # Install frontend dependencies
+   cd frontend && npm install
+   
+   # Install backend dependencies
+   cd ../backend && npm install
+   ```
+
+3. Create environment files:
+   ```bash
+   # In backend directory
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+4. Start development servers:
+   ```bash
+   # From root directory
+   npm run dev
+   ```
+
+5. Access the application:
+   - Frontend: http://localhost:5173 (or next available port)
+   - Backend: http://localhost:3000
+
+### Environment Variables
+Create a `.env` file in the backend directory with:
+```env
+PORT=3000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
+```
+
+## 🎯 Current Features
+
+### Core Functionality
+- ✅ Real-time chat interface with OpenAI integration
+- ✅ Settings management (API key, model selection)
+- ✅ Demo mode for evaluation without API key
+- ✅ Responsive design (mobile-first)
+- ✅ Secure API key handling
+
+### Technical Implementation
+- ✅ React functional components with hooks
+- ✅ Express backend with security middleware
+- ✅ RESTful API communication
+- ✅ Error handling and loading states
+- ✅ Rate limiting and CORS protection
+
+### User Experience
+- ✅ Mobile-first responsive design
+- ✅ Intuitive chat interface
+- ✅ Settings persistence
+- ✅ Clear error messages
+- ✅ Loading state indicators
+
+## 📝 Documentation Status
+
+### Completed
+- ✅ Component documentation (JSDoc)
+- ✅ API endpoint documentation
+- ✅ Security implementation notes
+- ✅ Basic README structure
+
+### In Progress
+- 🔄 Comprehensive installation guide
+- 🔄 Architecture documentation
+- 🔄 API documentation
+- 🔄 Presentation materials
+
+### Pending
+- 📋 Final technical abstract
+- 📋 Deployment guide
+- 📋 Testing documentation
+- 📋 User guide

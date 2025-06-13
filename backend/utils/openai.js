@@ -1,10 +1,19 @@
 /**
  * openai.js
  * Utility functions for OpenAI API communication and demo mode.
+ * Handles both real OpenAI API calls and demo mode responses for evaluation.
  */
 const OpenAI = require('openai');
 
-// Demo responses for different scenarios
+/**
+ * Demo response templates for different conversation scenarios.
+ * Used when demo mode is enabled to simulate AI responses without an API key.
+ * 
+ * @constant {Object} DEMO_RESPONSES
+ * @property {string[]} coding - Responses for programming-related queries
+ * @property {string[]} general - Responses for general knowledge questions
+ * @property {string[]} error - Responses for error scenarios or unclear queries
+ */
 const DEMO_RESPONSES = {
   coding: [
     "Here's how you can implement that in JavaScript:\n```javascript\nconst example = () => {\n  console.log('Hello, World!');\n};\n```",
@@ -49,11 +58,12 @@ const validateApiKey = async (apiKey) => {
 };
 
 /**
- * Gets a chat completion from OpenAI
+ * Gets a chat completion from OpenAI API
  * @param {string} apiKey - OpenAI API key
- * @param {string} message - User message
- * @param {string} model - Model to use
- * @returns {Promise<string>} AI response
+ * @param {string} message - User message to send to the AI
+ * @param {string} model - Model to use (gpt-3.5-turbo or gpt-4)
+ * @returns {Promise<string>} AI response content
+ * @throws {Error} If API call fails or key is invalid
  */
 const getChatCompletion = async (apiKey, message, model) => {
   try {
@@ -76,42 +86,17 @@ const getChatCompletion = async (apiKey, message, model) => {
 };
 
 /**
- * Gets a demo response based on the message content
- * @param {string} message - User message
- * @param {string} model - Selected model (for response context)
- * @returns {Promise<string>} Demo response
+ * Generates a simple demo response based on the selected model.
+ * @param {string} message - User message (ignored in demo mode)
+ * @param {string} model - Selected model (gpt-3.5-turbo or gpt-4)
+ * @returns {Promise<string>} Demo response string
  */
 const getDemoResponse = async (message, model) => {
-  if (demoMode) {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Determine response type based on message content
-    let responseType = 'general';
-    const lowerMessage = message.toLowerCase();
-
-    if (lowerMessage.includes('code') || 
-        lowerMessage.includes('function') || 
-        lowerMessage.includes('implement')) {
-      responseType = 'coding';
-    } else if (lowerMessage.includes('error') || 
-               lowerMessage.includes('problem') || 
-               lowerMessage.includes('issue')) {
-      responseType = 'error';
-    }
-
-    // Get random response from appropriate category
-    const responses = DEMO_RESPONSES[responseType];
-    let response = responses[Math.floor(Math.random() * responses.length)];
-
-    // Update the general demo response to clarify API key requirement
-    if (responseType === 'general') {
-      response = "Demo mode is enabled. To communicate directly with OpenAI's API and receive real responses, please provide your own API key in the settings. Demo mode is only for testing the chat interface UI.";
-    }
-
-    // Add model context to response
-    return `[Demo Mode - ${model}]\n${response}`;
+  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+  if (model === 'gpt-4') {
+    return 'This is a demo response. In the full version, this would be a response from gpt-4.';
   }
+  return 'This is a demo response. In the full version, this would be a response from gpt-3.5-turbo.';
 };
 
 module.exports = {

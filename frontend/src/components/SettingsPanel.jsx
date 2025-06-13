@@ -48,7 +48,7 @@ const SettingsPanel = ({
         <div className="relative flex items-center">
           <input
             type={showKey ? 'text' : 'password'}
-            className="w-full rounded-lg border border-gray-300 p-2 pr-16 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
+            className="w-full rounded-lg border border-gray-300 p-2 pr-16 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 text-text-primary placeholder-text-primary placeholder:text-text-primary"
             placeholder="sk-..."
             value={apiKey}
             onChange={handleKeyChange}
@@ -71,7 +71,7 @@ const SettingsPanel = ({
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1">Model</label>
         <select
-          className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
+          className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 text-text-primary"
           value={model}
           onChange={(e) => onModelChange(e.target.value)}
           disabled={demoMode}

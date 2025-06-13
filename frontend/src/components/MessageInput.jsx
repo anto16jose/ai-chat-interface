@@ -46,7 +46,7 @@ const MessageInput = ({ onSend, isLoading, maxLength = 500 }) => {
     <div className="flex flex-col gap-1 w-full">
       <div className="relative">
         <textarea
-          className="w-full min-h-[44px] max-h-32 resize-y rounded-xl border border-gray-300 p-3 pr-20 text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 transition"
+          className="w-full min-h-[44px] max-h-32 resize-y rounded-xl border border-gray-300 p-3 pr-20 text-base md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 transition text-text-primary"
           placeholder="Type your message..."
           value={input}
           onChange={handleChange}

@@ -47,7 +47,7 @@ const useChat = () => {
 
   // Validate API key format
   const validateApiKey = useCallback((key) => {
-    return /^sk-[A-Za-z0-9]{20,}$/.test(key);
+    return /^sk-[a-zA-Z0-9-_]{20,}$/.test(key);
   }, []);
 
   // Send message to API

@@ -34,7 +34,7 @@ const SettingsPanel = ({
   const handleKeyChange = (e) => {
     const value = e.target.value;
     onApiKeyChange(value);
-    if (value && !/^sk-[A-Za-z0-9]{20,}$/.test(value)) {
+    if (value && !/^sk-[a-zA-Z0-9-_]{20,}$/.test(value)) {
       setKeyError('Invalid API key format.');
     } else {
       setKeyError('');

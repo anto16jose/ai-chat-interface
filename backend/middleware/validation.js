@@ -9,7 +9,7 @@
  * @returns {boolean} Whether the key is valid
  */
 const isValidApiKey = (key) => {
-  return typeof key === 'string' && /^sk-[A-Za-z0-9]{20,}$/.test(key);
+  return typeof key === 'string' && /^sk-[a-zA-Z0-9-_]{20,}$/.test(key);
 };
 
 /**

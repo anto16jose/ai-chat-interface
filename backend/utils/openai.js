@@ -82,29 +82,36 @@ const getChatCompletion = async (apiKey, message, model) => {
  * @returns {Promise<string>} Demo response
  */
 const getDemoResponse = async (message, model) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  if (demoMode) {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-  // Determine response type based on message content
-  let responseType = 'general';
-  const lowerMessage = message.toLowerCase();
+    // Determine response type based on message content
+    let responseType = 'general';
+    const lowerMessage = message.toLowerCase();
 
-  if (lowerMessage.includes('code') || 
-      lowerMessage.includes('function') || 
-      lowerMessage.includes('implement')) {
-    responseType = 'coding';
-  } else if (lowerMessage.includes('error') || 
-             lowerMessage.includes('problem') || 
-             lowerMessage.includes('issue')) {
-    responseType = 'error';
+    if (lowerMessage.includes('code') || 
+        lowerMessage.includes('function') || 
+        lowerMessage.includes('implement')) {
+      responseType = 'coding';
+    } else if (lowerMessage.includes('error') || 
+               lowerMessage.includes('problem') || 
+               lowerMessage.includes('issue')) {
+      responseType = 'error';
+    }
+
+    // Get random response from appropriate category
+    const responses = DEMO_RESPONSES[responseType];
+    let response = responses[Math.floor(Math.random() * responses.length)];
+
+    // Update the general demo response to clarify API key requirement
+    if (responseType === 'general') {
+      response = "Demo mode is enabled. To communicate directly with OpenAI's API and receive real responses, please provide your own API key in the settings. Demo mode is only for testing the chat interface UI.";
+    }
+
+    // Add model context to response
+    return `[Demo Mode - ${model}]\n${response}`;
   }
-
-  // Get random response from appropriate category
-  const responses = DEMO_RESPONSES[responseType];
-  const response = responses[Math.floor(Math.random() * responses.length)];
-
-  // Add model context to response
-  return `[Demo Mode - ${model}]\n${response}`;
 };
 
 module.exports = {

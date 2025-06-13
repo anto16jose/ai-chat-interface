@@ -8,18 +8,36 @@ import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import SettingsPanel from './SettingsPanel';
 import { Cog6ToothIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import useChat from '../hooks/useChat';
 
 const ChatInterface = () => {
-  const [messages, setMessages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [apiKey, setApiKey] = useState('');
-  const [model, setModel] = useState('gpt-3.5-turbo');
-  const [demoMode, setDemoMode] = useState(false);
+  // Use the chat hook for state management and API communication
+  const {
+    messages,
+    isLoading,
+    error,
+    apiKey,
+    model,
+    demoMode,
+    setApiKey,
+    setModel,
+    setDemoMode,
+    sendMessage,
+    clearChat,
+    clearError,
+    toggleDemoMode,
+    validateKeyWithBackend
+  } = useChat();
+
+  // Local UI state
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleSendMessage = (text) => {
-    setMessages((prev) => [...prev, { role: 'user', content: text }]);
+  // Handle API key change with validation
+  const handleApiKeyChange = async (newKey) => {
+    setApiKey(newKey);
+    if (newKey && !demoMode) {
+      await validateKeyWithBackend(newKey);
+    }
   };
 
   return (
@@ -47,7 +65,7 @@ const ChatInterface = () => {
           </div>
           {/* Input */}
           <div className="border-t border-gray-200 px-2 py-3 sm:px-4 md:px-6 bg-white">
-            <MessageInput onSend={handleSendMessage} isLoading={isLoading} />
+            <MessageInput onSend={sendMessage} isLoading={isLoading} />
           </div>
         </section>
 
@@ -55,11 +73,11 @@ const ChatInterface = () => {
         <aside className="hidden md:flex md:flex-col md:w-1/3 border-l border-gray-100 bg-gray-50 p-6">
           <SettingsPanel
             apiKey={apiKey}
-            onApiKeyChange={setApiKey}
+            onApiKeyChange={handleApiKeyChange}
             model={model}
             onModelChange={setModel}
             demoMode={demoMode}
-            onDemoModeToggle={() => setDemoMode((v) => !v)}
+            onDemoModeToggle={toggleDemoMode}
           />
         </aside>
       </main>
@@ -88,11 +106,11 @@ const ChatInterface = () => {
             </div>
             <SettingsPanel
               apiKey={apiKey}
-              onApiKeyChange={setApiKey}
+              onApiKeyChange={handleApiKeyChange}
               model={model}
               onModelChange={setModel}
               demoMode={demoMode}
-              onDemoModeToggle={() => setDemoMode((v) => !v)}
+              onDemoModeToggle={toggleDemoMode}
             />
           </div>
         </>
@@ -106,7 +124,10 @@ const ChatInterface = () => {
       )}
 
       {error && (
-        <div className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-lg z-50">
+        <div 
+          className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-lg z-50 cursor-pointer"
+          onClick={clearError}
+        >
           {error}
         </div>
       )}

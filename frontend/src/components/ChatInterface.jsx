@@ -97,17 +97,22 @@ const ChatInterface = () => {
     onDemoModeToggle: toggleDemoMode
   };
 
+  // Calculate total session cost (sum of all assistant message costs)
+  const totalCost = messages
+    .filter(m => m.role === 'assistant' && m.usage && typeof m.usage.cost === 'number')
+    .reduce((sum, m) => sum + m.usage.cost, 0);
+
   return (
     <div className="h-screen w-full bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col md:flex-row">
       {/* Sidebar (Desktop) */}
       <aside className="hidden md:flex md:flex-col md:w-80 bg-white border-r border-gray-200 shadow-lg h-screen p-6 fixed top-0 left-0 z-30">
         <h2 className="text-xl font-bold text-blue-700 mb-6 tracking-tight">Settings</h2>
-        <SettingsPanel {...settingsPanelProps} />
+        <SettingsPanel {...settingsPanelProps} totalCost={totalCost} />
       </aside>
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col h-full md:ml-80">
         {/* Header Bar */}
-        <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
+        <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm fixed top-0 left-0 w-full z-40">
           <span className="text-2xl font-bold text-blue-700 tracking-tight">AI Chat</span>
           {/* Settings button (mobile) */}
           <button
@@ -119,7 +124,7 @@ const ChatInterface = () => {
           </button>
         </header>
         {/* Chat area */}
-        <main className="flex-1 flex flex-col justify-between bg-gradient-to-br from-white to-blue-50">
+        <main className="flex-1 flex flex-col justify-between bg-gradient-to-br from-white to-blue-50 pt-[72px] md:pt-[72px]">
           <div className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">
             <MessageList messages={messages} isLoading={isLoading} />
           </div>
@@ -160,7 +165,7 @@ const ChatInterface = () => {
               <XMarkIcon className="h-6 w-6 text-blue-600" />
             </button>
             <h2 className="text-xl font-bold text-blue-700 mb-6 mt-6 tracking-tight">Settings</h2>
-            <SettingsPanel {...settingsPanelProps} />
+            <SettingsPanel {...settingsPanelProps} totalCost={totalCost} />
           </aside>
         </div>
       )}

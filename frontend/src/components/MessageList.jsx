@@ -18,16 +18,18 @@
  * @param {Array<Object>} messages - Array of message objects
  * @param {string} messages[].role - Message role ('user' or 'assistant')
  * @param {string} messages[].content - Message content text
+ * @param {boolean} isLoading - Whether a message is being loaded
  *
  * @example
  * ```jsx
  * <MessageList messages={[
  *   { role: 'user', content: 'Hello!' },
  *   { role: 'assistant', content: 'Hi there!' }
- * ]} />
+ * ]} isLoading={false} />
  * ```
  */
 import { useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 const MessageBubble = ({ message, index }) => {
   const isUser = message.role === 'user';
@@ -43,7 +45,15 @@ const MessageBubble = ({ message, index }) => {
         }`}
       style={{ animationDelay: `${animationDelay}ms` }}
     >
-      {message.content}
+      <div className="prose prose-sm max-w-none">
+        <ReactMarkdown>{message.content}</ReactMarkdown>
+      </div>
+      {message.usage && (
+        <div className="mt-2 text-xs opacity-75">
+          <div>Tokens: {message.usage.totalTokens} (prompt: {message.usage.promptTokens}, completion: {message.usage.completionTokens})</div>
+          <div>Cost: ${message.usage.cost.toFixed(6)}</div>
+        </div>
+      )}
     </div>
   );
 };
@@ -67,7 +77,7 @@ const EmptyState = () => (
   </div>
 );
 
-const MessageList = ({ messages = [] }) => {
+const MessageList = ({ messages, isLoading }) => {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -83,10 +93,34 @@ const MessageList = ({ messages = [] }) => {
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      {messages.map((msg, idx) => (
-        <MessageBubble key={idx} message={msg} index={idx} />
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {messages.map((message, index) => (
+        <div
+          key={index}
+          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+        >
+          <div
+            className={`max-w-[80%] rounded-lg p-4 ${
+              message.role === 'user'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 text-gray-800'
+            }`}
+          >
+            <MessageBubble message={message} index={index} />
+          </div>
+        </div>
       ))}
+      {isLoading && (
+        <div className="flex justify-start">
+          <div className="bg-gray-100 rounded-lg p-4">
+            <div className="flex space-x-2">
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
+              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+            </div>
+          </div>
+        </div>
+      )}
       <div ref={messagesEndRef} />
     </div>
   );

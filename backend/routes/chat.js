@@ -39,6 +39,7 @@ const { validateApiKey, getChatCompletion, getDemoResponse } = require('../utils
  *
  * @returns {Object} JSON response
  * @returns {string} response.content - The AI's response message
+ * @returns {Object} [response.usage] - Token usage and cost information
  * @returns {Object} [response.error] - Error details (development only)
  *
  * @throws {400} Bad Request - Invalid request format
@@ -56,7 +57,13 @@ const { validateApiKey, getChatCompletion, getDemoResponse } = require('../utils
  *
  * // Response
  * {
- *   "content": "React is a JavaScript library for building user interfaces..."
+ *   "content": "React is a JavaScript library for building user interfaces...",
+ *   "usage": {
+ *     "promptTokens": 10,
+ *     "completionTokens": 50,
+ *     "totalTokens": 60,
+ *     "cost": 0.00025
+ *   }
  * }
  */
 router.post('/chat', validateChatRequest, async (req, res) => {
@@ -66,12 +73,20 @@ router.post('/chat', validateChatRequest, async (req, res) => {
     // Handle demo mode
     if (demoMode) {
       const response = await getDemoResponse(message, model);
-      return res.json({ content: response });
+      return res.json({
+        content: response,
+        usage: {
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+          cost: 0
+        }
+      });
     }
 
     // Get real AI response
-    const content = await getChatCompletion(apiKey, message, model);
-    res.json({ content });
+    const { content, usage } = await getChatCompletion(apiKey, message, model);
+    res.json({ content, usage });
   } catch (error) {
     console.error('Chat error:', error);
     res.status(500).json({

@@ -65,114 +65,85 @@ const ErrorMessage = ({ message, onDismiss }) => (
 );
 
 const ChatInterface = () => {
-  // Use the chat hook for state management and API communication
-  const {
-    messages,
-    isLoading,
-    error,
-    apiKey,
-    model,
-    demoMode,
-    setApiKey,
-    setModel,
-    setDemoMode,
-    sendMessage,
-    clearChat,
-    clearError,
-    toggleDemoMode,
-    validateKeyWithBackend
-  } = useChat();
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [settings, setSettings] = useState({
+    apiKey: '',
+    model: 'gpt-3.5-turbo',
+    demoMode: false
+  });
 
-  // Local UI state
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
-  // Handle API key change with validation
-  const handleApiKeyChange = async (newKey) => {
-    setApiKey(newKey);
-    if (newKey && !demoMode) {
-      await validateKeyWithBackend(newKey);
+    const userMessage = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: input,
+          model: settings.model,
+          apiKey: settings.apiKey,
+          demoMode: settings.demoMode
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: data.content,
+        usage: data.usage
+      }]);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="w-full bg-white shadow-sm px-4 py-3 md:px-8 md:py-4 border-b border-gray-200 flex items-center justify-between">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">AI Chat Interface</h1>
-        {/* Settings button for mobile */}
-        <button
-          className="md:hidden p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-colors duration-200"
-          aria-label="Open settings"
-          onClick={() => setDrawerOpen(true)}
-        >
-          <Cog6ToothIcon className="h-6 w-6 text-gray-700" />
-        </button>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col md:flex-row md:items-stretch max-w-5xl w-full mx-auto md:mt-8 md:rounded-xl md:shadow-lg md:bg-white md:overflow-hidden">
-        {/* Chat Area - Mobile: full, Desktop: 2/3 */}
-        <section className="flex-1 flex flex-col h-full md:w-2/3 bg-white md:bg-transparent">
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-2 py-4 sm:px-4 md:px-6">
-            <MessageList messages={messages} />
-          </div>
-          {/* Input */}
-          <div className="border-t border-gray-200 px-2 py-3 sm:px-4 md:px-6 bg-white">
-            <MessageInput onSend={sendMessage} isLoading={isLoading} />
-          </div>
-        </section>
-
-        {/* Settings Panel - Desktop sidebar */}
-        <aside className="hidden md:flex md:flex-col md:w-1/3 border-l border-gray-100 bg-gray-50 p-6">
-          <SettingsPanel
-            apiKey={apiKey}
-            onApiKeyChange={handleApiKeyChange}
-            model={model}
-            onModelChange={setModel}
-            demoMode={demoMode}
-            onDemoModeToggle={toggleDemoMode}
+    <div className="flex flex-col h-screen bg-gray-50">
+      <div className="flex-1 overflow-hidden">
+        <MessageList messages={messages} isLoading={isLoading} />
+      </div>
+      {error && (
+        <div className="p-4 bg-red-100 text-red-700">
+          {error}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="p-4 border-t bg-white">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isLoading}
           />
-        </aside>
-      </main>
-
-      {/* Mobile Settings Drawer */}
-      <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 z-40 ${
-          drawerOpen ? 'bg-opacity-30' : 'bg-opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setDrawerOpen(false)}
-        aria-label="Close settings drawer"
-        tabIndex={-1}
-      />
-      <div
-        className={`fixed top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-lg z-50 flex flex-col p-6 transition-transform duration-300 transform ${
-          drawerOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">Settings</h2>
           <button
-            className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-colors duration-200"
-            aria-label="Close settings"
-            onClick={() => setDrawerOpen(false)}
+            type="submit"
+            disabled={isLoading}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
-            <XMarkIcon className="h-6 w-6 text-gray-700" />
+            Send
           </button>
         </div>
-        <SettingsPanel
-          apiKey={apiKey}
-          onApiKeyChange={handleApiKeyChange}
-          model={model}
-          onModelChange={setModel}
-          demoMode={demoMode}
-          onDemoModeToggle={toggleDemoMode}
-        />
-      </div>
-
-      {/* Loading and Error States */}
-      {isLoading && <LoadingOverlay />}
-      {error && <ErrorMessage message={error} onDismiss={clearError} />}
+      </form>
+      <SettingsPanel settings={settings} onSettingsChange={setSettings} />
     </div>
   );
 };

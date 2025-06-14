@@ -17,9 +17,11 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "axios": "^1.9.0",
+    "crypto-js": "4.2.0",
     "lucide-react": "^0.514.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-markdown": "10.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

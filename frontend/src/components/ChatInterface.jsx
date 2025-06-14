@@ -100,12 +100,12 @@ const ChatInterface = () => {
   return (
     <div className="h-screen w-full bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col md:flex-row">
       {/* Sidebar (Desktop) */}
-      <aside className="hidden md:flex md:flex-col md:w-80 bg-white border-r border-gray-200 shadow-lg h-full p-6">
+      <aside className="hidden md:flex md:flex-col md:w-80 bg-white border-r border-gray-200 shadow-lg h-screen p-6 fixed top-0 left-0 z-30">
         <h2 className="text-xl font-bold text-blue-700 mb-6 tracking-tight">Settings</h2>
         <SettingsPanel {...settingsPanelProps} />
       </aside>
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col h-full">
+      <div className="flex-1 flex flex-col h-full md:ml-80">
         {/* Header Bar */}
         <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
           <span className="text-2xl font-bold text-blue-700 tracking-tight">AI Chat</span>

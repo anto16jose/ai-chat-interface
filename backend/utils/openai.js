@@ -1,18 +1,44 @@
 /**
- * openai.js
- * Utility functions for OpenAI API communication and demo mode.
+ * @file openai.js
+ * @description Utility functions for OpenAI API communication and demo mode.
  * Handles both real OpenAI API calls and demo mode responses for evaluation.
+ *
+ * @module utils/openai
+ * @requires openai
+ *
+ * @features
+ * - OpenAI API integration
+ * - API key validation
+ * - Chat completion generation
+ * - Demo mode responses
+ *
+ * @security
+ * - API key validation
+ * - Error handling
+ * - Environment-aware error details
  */
+
 const OpenAI = require('openai');
 
 /**
  * Demo response templates for different conversation scenarios.
  * Used when demo mode is enabled to simulate AI responses without an API key.
- * 
+ * Provides realistic responses for evaluation purposes.
+ *
  * @constant {Object} DEMO_RESPONSES
  * @property {string[]} coding - Responses for programming-related queries
  * @property {string[]} general - Responses for general knowledge questions
  * @property {string[]} error - Responses for error scenarios or unclear queries
+ *
+ * @example
+ * // Coding response
+ * "Here's how you can implement that in JavaScript:\n```javascript\nconst example = () => {\n  console.log('Hello, World!');\n};\n```"
+ *
+ * // General response
+ * "That's an interesting question! Let me explain..."
+ *
+ * // Error response
+ * "I apologize, but I'm having trouble processing that request."
  */
 const DEMO_RESPONSES = {
   coding: [
@@ -34,8 +60,13 @@ const DEMO_RESPONSES = {
 
 /**
  * Creates an OpenAI client instance
+ * Initializes the OpenAI SDK with the provided API key
+ *
  * @param {string} apiKey - OpenAI API key
  * @returns {OpenAI} OpenAI client instance
+ *
+ * @example
+ * const client = createOpenAIClient('sk-...');
  */
 const createOpenAIClient = (apiKey) => {
   return new OpenAI({ apiKey });
@@ -43,8 +74,16 @@ const createOpenAIClient = (apiKey) => {
 
 /**
  * Validates an OpenAI API key by making a test request
+ * Attempts to list models to verify key validity
+ *
  * @param {string} apiKey - OpenAI API key to validate
  * @returns {Promise<boolean>} Whether the key is valid
+ *
+ * @example
+ * const isValid = await validateApiKey('sk-...');
+ * if (isValid) {
+ *   console.log('API key is valid');
+ * }
  */
 const validateApiKey = async (apiKey) => {
   try {
@@ -59,11 +98,21 @@ const validateApiKey = async (apiKey) => {
 
 /**
  * Gets a chat completion from OpenAI API
+ * Sends a message to the specified model and returns the response
+ *
  * @param {string} apiKey - OpenAI API key
  * @param {string} message - User message to send to the AI
  * @param {string} model - Model to use (gpt-3.5-turbo or gpt-4)
  * @returns {Promise<string>} AI response content
  * @throws {Error} If API call fails or key is invalid
+ *
+ * @example
+ * try {
+ *   const response = await getChatCompletion('sk-...', 'What is React?', 'gpt-3.5-turbo');
+ *   console.log(response);
+ * } catch (error) {
+ *   console.error('Failed to get response:', error.message);
+ * }
  */
 const getChatCompletion = async (apiKey, message, model) => {
   try {
@@ -79,7 +128,7 @@ const getChatCompletion = async (apiKey, message, model) => {
   } catch (error) {
     console.error('OpenAI API error:', error.message);
     throw new Error(
-      error.response?.data?.error?.message || 
+      error.response?.data?.error?.message ||
       'Failed to get response from OpenAI'
     );
   }
@@ -87,9 +136,16 @@ const getChatCompletion = async (apiKey, message, model) => {
 
 /**
  * Generates a simple demo response based on the selected model.
+ * Simulates API delay and returns appropriate demo response.
+ *
  * @param {string} message - User message (ignored in demo mode)
  * @param {string} model - Selected model (gpt-3.5-turbo or gpt-4)
  * @returns {Promise<string>} Demo response string
+ *
+ * @example
+ * const response = await getDemoResponse('What is React?', 'gpt-3.5-turbo');
+ * console.log(response);
+ * // Output: "This is a demo response. In the full version, this would be a response from gpt-3.5-turbo."
  */
 const getDemoResponse = async (message, model) => {
   await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
@@ -103,4 +159,4 @@ module.exports = {
   validateApiKey,
   getChatCompletion,
   getDemoResponse
-}; 
+};

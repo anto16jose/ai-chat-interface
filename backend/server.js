@@ -1,7 +1,27 @@
 /**
- * server.js
- * Main Express server for the AI Chat Interface backend.
+ * @file server.js
+ * @description Main Express server for the AI Chat Interface backend.
  * Handles API endpoints, middleware, and security features.
+ *
+ * @module server
+ * @requires dotenv
+ * @requires express
+ * @requires cors
+ * @requires helmet
+ * @requires express-rate-limit
+ *
+ * @features
+ * - Security middleware (CORS, Helmet, Rate Limiting)
+ * - Request logging (development only)
+ * - Error handling
+ * - Graceful shutdown
+ *
+ * @security
+ * - CORS protection with specific origin
+ * - Helmet security headers
+ * - Rate limiting per IP
+ * - Request size limiting
+ * - Error message sanitization
  */
 require('dotenv').config();
 const express = require('express');
@@ -24,7 +44,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Rate limiting
+// Rate limiting configuration
+// Prevents abuse by limiting requests per IP address
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
@@ -32,10 +53,12 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Body parsing
+// Body parsing with size limit
+// Prevents large payload attacks
 app.use(express.json({ limit: '1mb' })); // Limit payload size
 
 // Request logging (development only)
+// Provides detailed request information for debugging
 if (process.env.NODE_ENV !== 'production') {
   app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
@@ -43,20 +66,21 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Routes
+// API Routes
 app.use('/api', chatRoutes);
 
-// Error handling middleware
+// Global error handling middleware
+// Provides consistent error responses and logging
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({
-    error: process.env.NODE_ENV === 'production' 
-      ? 'An unexpected error occurred' 
+    error: process.env.NODE_ENV === 'production'
+      ? 'An unexpected error occurred'
       : err.message
   });
 });
 
-// 404 handler
+// 404 handler for undefined routes
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });
 });
@@ -67,16 +91,21 @@ app.listen(PORT, () => {
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
+// Graceful shutdown handlers
+// Ensures proper cleanup on unexpected errors
+
 // Handle uncaught exceptions
+// Prevents server from hanging on unhandled errors
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
   process.exit(1);
 });
 
 // Handle unhandled promise rejections
+// Prevents server from hanging on unhandled promises
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   process.exit(1);
 });
 
-module.exports = app; // For testing purposes 
+module.exports = app; // For testing purposes

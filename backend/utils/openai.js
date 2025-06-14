@@ -11,6 +11,7 @@
  * - API key validation
  * - Chat completion generation
  * - Demo mode responses
+ * - Cost calculation
  *
  * @security
  * - API key validation
@@ -19,6 +20,40 @@
  */
 
 const OpenAI = require('openai');
+
+// OpenAI pricing per 1K tokens (as of 2024)
+const PRICING = {
+  'gpt-3.5-turbo': {
+    input: 0.0015,  // $0.0015 per 1K tokens
+    output: 0.002   // $0.002 per 1K tokens
+  },
+  'gpt-4': {
+    input: 0.03,    // $0.03 per 1K tokens
+    output: 0.06    // $0.06 per 1K tokens
+  }
+};
+
+/**
+ * Calculates the cost of an API call based on token usage
+ *
+ * @param {string} model - The model used (gpt-3.5-turbo or gpt-4)
+ * @param {number} promptTokens - Number of tokens in the prompt
+ * @param {number} completionTokens - Number of tokens in the completion
+ * @returns {number} Total cost in USD
+ *
+ * @example
+ * const cost = calculateCost('gpt-3.5-turbo', 100, 50);
+ * console.log(cost); // 0.00025 (USD)
+ */
+const calculateCost = (model, promptTokens, completionTokens) => {
+  const modelPricing = PRICING[model];
+  if (!modelPricing) return 0;
+
+  const inputCost = (promptTokens / 1000) * modelPricing.input;
+  const outputCost = (completionTokens / 1000) * modelPricing.output;
+
+  return inputCost + outputCost;
+};
 
 /**
  * Demo response templates for different conversation scenarios.
@@ -103,13 +138,14 @@ const validateApiKey = async (apiKey) => {
  * @param {string} apiKey - OpenAI API key
  * @param {string} message - User message to send to the AI
  * @param {string} model - Model to use (gpt-3.5-turbo or gpt-4)
- * @returns {Promise<string>} AI response content
+ * @returns {Promise<Object>} Response object with content and usage
  * @throws {Error} If API call fails or key is invalid
  *
  * @example
  * try {
  *   const response = await getChatCompletion('sk-...', 'What is React?', 'gpt-3.5-turbo');
- *   console.log(response);
+ *   console.log(response.content);
+ *   console.log(response.usage);
  * } catch (error) {
  *   console.error('Failed to get response:', error.message);
  * }
@@ -124,7 +160,18 @@ const getChatCompletion = async (apiKey, message, model) => {
       temperature: 0.7
     });
 
-    return completion.choices[0].message.content;
+    const { prompt_tokens, completion_tokens, total_tokens } = completion.usage;
+    const cost = calculateCost(model, prompt_tokens, completion_tokens);
+
+    return {
+      content: completion.choices[0].message.content,
+      usage: {
+        promptTokens: prompt_tokens,
+        completionTokens: completion_tokens,
+        totalTokens: total_tokens,
+        cost: cost
+      }
+    };
   } catch (error) {
     console.error('OpenAI API error:', error.message);
     throw new Error(

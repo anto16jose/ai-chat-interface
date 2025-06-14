@@ -65,85 +65,105 @@ const ErrorMessage = ({ message, onDismiss }) => (
 );
 
 const ChatInterface = () => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [settings, setSettings] = useState({
-    apiKey: '',
-    model: 'gpt-3.5-turbo',
-    demoMode: false
-  });
+  // Use the unified chat hook for all state and handlers
+  const {
+    messages,
+    isLoading,
+    error,
+    apiKey,
+    model,
+    demoMode,
+    setApiKey,
+    setModel,
+    setDemoMode,
+    sendMessage,
+    clearError,
+    toggleDemoMode
+  } = useChat();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  // Handler for sending a message
+  const handleSend = (content) => {
+    sendMessage(content);
+  };
 
-    const userMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: input,
-          model: settings.model,
-          apiKey: settings.apiKey,
-          demoMode: settings.demoMode
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
-
-      const data = await response.json();
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: data.content,
-        usage: data.usage
-      }]);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
+  // SettingsPanel props
+  const settingsPanelProps = {
+    apiKey,
+    onApiKeyChange: setApiKey,
+    model,
+    onModelChange: setModel,
+    demoMode,
+    onDemoModeToggle: toggleDemoMode
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      <div className="flex-1 overflow-hidden">
-        <MessageList messages={messages} isLoading={isLoading} />
+    <div className="h-screen w-full bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col md:flex-row">
+      {/* Sidebar (Desktop) */}
+      <aside className="hidden md:flex md:flex-col md:w-80 bg-white border-r border-gray-200 shadow-lg h-full p-6">
+        <h2 className="text-xl font-bold text-blue-700 mb-6 tracking-tight">Settings</h2>
+        <SettingsPanel {...settingsPanelProps} />
+      </aside>
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col h-full">
+        {/* Header Bar */}
+        <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
+          <span className="text-2xl font-bold text-blue-700 tracking-tight">AI Chat</span>
+          {/* Settings button (mobile) */}
+          <button
+            className="md:hidden p-2 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Open settings"
+          >
+            <Cog6ToothIcon className="h-7 w-7 text-blue-600" />
+          </button>
+        </header>
+        {/* Chat area */}
+        <main className="flex-1 flex flex-col justify-between bg-gradient-to-br from-white to-blue-50">
+          <div className="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8">
+            <MessageList messages={messages} isLoading={isLoading} />
+          </div>
+          <div className="px-4 pb-6 md:px-8 md:pb-8">
+            <MessageInput onSend={handleSend} isLoading={isLoading} />
+          </div>
+        </main>
+        {/* Error message (floating) */}
+        {error && (
+          <div className="fixed bottom-6 right-6 z-50 bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-lg cursor-pointer animate-fade-in"
+            onClick={clearError}
+            role="alert"
+          >
+            <div className="flex items-center space-x-2">
+              <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <p>{error}</p>
+            </div>
+          </div>
+        )}
       </div>
-      {error && (
-        <div className="p-4 bg-red-100 text-red-700">
-          {error}
+      {/* Settings Drawer (Mobile) */}
+      {drawerOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
+            onClick={() => setDrawerOpen(false)}
+          ></div>
+          {/* Drawer panel */}
+          <aside className="relative ml-auto w-4/5 max-w-xs bg-white h-full shadow-2xl flex flex-col animate-slide-in p-6">
+            <button
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={() => setDrawerOpen(false)}
+              aria-label="Close settings"
+            >
+              <XMarkIcon className="h-6 w-6 text-blue-600" />
+            </button>
+            <h2 className="text-xl font-bold text-blue-700 mb-6 mt-6 tracking-tight">Settings</h2>
+            <SettingsPanel {...settingsPanelProps} />
+          </aside>
         </div>
       )}
-      <form onSubmit={handleSubmit} className="p-4 border-t bg-white">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isLoading}
-          />
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-          >
-            Send
-          </button>
-        </div>
-      </form>
-      <SettingsPanel settings={settings} onSettingsChange={setSettings} />
     </div>
   );
 };

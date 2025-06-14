@@ -1,17 +1,41 @@
 /**
- * SettingsPanel.jsx
- * Panel for API key input, model selection, and demo mode toggle.
- * Responsive: sidebar on desktop, drawer on mobile.
+ * @file SettingsPanel.jsx
+ * @description Settings panel component for managing API key, model selection, and demo mode.
+ * Implements responsive design with form validation and secure API key handling.
  *
- * @component
- * @param {Object} props
- * @param {string} props.apiKey - Current API key
- * @param {function} props.onApiKeyChange - Handler for API key change
- * @param {string} props.model - Current model
- * @param {function} props.onModelChange - Handler for model change
- * @param {boolean} props.demoMode - Demo mode enabled
- * @param {function} props.onDemoModeToggle - Handler for demo mode toggle
- * @returns {JSX.Element}
+ * @component SettingsPanel
+ * @requires React
+ *
+ * @features
+ * - API key input with show/hide toggle
+ * - Model selection dropdown (GPT-3.5-turbo, GPT-4)
+ * - Demo mode toggle switch
+ * - Real-time API key validation
+ * - Responsive layout
+ *
+ * @props
+ * @param {string} apiKey - Current OpenAI API key
+ * @param {Function} onApiKeyChange - Handler for API key changes
+ * @param {string} model - Currently selected model
+ * @param {Function} onModelChange - Handler for model changes
+ * @param {boolean} demoMode - Whether demo mode is enabled
+ * @param {Function} onDemoModeToggle - Handler for demo mode toggle
+ *
+ * @state
+ * @param {boolean} showKey - Whether to show API key in plain text
+ * @param {string} keyError - API key validation error message
+ *
+ * @example
+ * ```jsx
+ * <SettingsPanel
+ *   apiKey="sk-..."
+ *   onApiKeyChange={(key) => console.log(key)}
+ *   model="gpt-3.5-turbo"
+ *   onModelChange={(model) => console.log(model)}
+ *   demoMode={false}
+ *   onDemoModeToggle={() => console.log('Toggle demo mode')}
+ * />
+ * ```
  */
 import { useState } from 'react';
 
@@ -100,4 +124,4 @@ const SettingsPanel = ({
   );
 };
 
-export default SettingsPanel; 
+export default SettingsPanel;

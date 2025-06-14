@@ -1,14 +1,37 @@
 /**
- * MessageInput.jsx
- * User input area for sending chat messages.
- * Handles Enter/Shift+Enter, character limit, loading, and error states.
+ * @file MessageInput.jsx
+ * @description User input component for sending chat messages.
+ * Implements a responsive textarea with character limit, loading states,
+ * and keyboard shortcuts (Enter to send, Shift+Enter for new line).
  *
- * @component
- * @param {Object} props
- * @param {function} props.onSend - Function to call with message string
- * @param {boolean} props.isLoading - Whether input should be disabled
- * @param {number} [props.maxLength=500] - Character limit
- * @returns {JSX.Element}
+ * @component MessageInput
+ * @requires React
+ *
+ * @features
+ * - Responsive textarea with auto-resize
+ * - Character limit with counter
+ * - Enter/Shift+Enter handling
+ * - Loading state support
+ * - Error message display
+ * - Send button with disabled states
+ *
+ * @props
+ * @param {Function} onSend - Callback function when message is sent
+ * @param {boolean} isLoading - Whether input should be disabled
+ * @param {number} [maxLength=500] - Maximum character limit
+ *
+ * @state
+ * @param {string} input - Current input value
+ * @param {string} error - Error message if any
+ *
+ * @example
+ * ```jsx
+ * <MessageInput
+ *   onSend={(message) => console.log(message)}
+ *   isLoading={false}
+ *   maxLength={500}
+ * />
+ * ```
  */
 import { useState } from 'react';
 
@@ -71,4 +94,4 @@ const MessageInput = ({ onSend, isLoading, maxLength = 500 }) => {
   );
 };
 
-export default MessageInput; 
+export default MessageInput;

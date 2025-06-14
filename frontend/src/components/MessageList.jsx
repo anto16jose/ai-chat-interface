@@ -1,12 +1,30 @@
 /**
- * MessageList.jsx
- * Displays the list of chat messages with user/assistant styling.
- * Handles empty state and auto-scroll (future).
+ * @file MessageList.jsx
+ * @description Displays the list of chat messages with user/assistant styling.
+ * Implements responsive design with different message bubble styles for user and assistant.
+ * Handles empty state and provides a clean interface for message display.
  *
- * @component
- * @param {Object} props
- * @param {Array} props.messages - Array of message objects {role, content}
- * @returns {JSX.Element}
+ * @component MessageList
+ * @requires React
+ *
+ * @features
+ * - Responsive message bubbles
+ * - Different styling for user vs assistant messages
+ * - Empty state handling
+ * - Auto-scroll to latest message (future implementation)
+ *
+ * @props
+ * @param {Array<Object>} messages - Array of message objects
+ * @param {string} messages[].role - Message role ('user' or 'assistant')
+ * @param {string} messages[].content - Message content text
+ *
+ * @example
+ * ```jsx
+ * <MessageList messages={[
+ *   { role: 'user', content: 'Hello!' },
+ *   { role: 'assistant', content: 'Hi there!' }
+ * ]} />
+ * ```
  */
 const MessageList = ({ messages = [] }) => {
   if (!messages.length) {
@@ -32,4 +50,4 @@ const MessageList = ({ messages = [] }) => {
   );
 };
 
-export default MessageList; 
+export default MessageList;

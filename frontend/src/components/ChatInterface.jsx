@@ -1,7 +1,33 @@
 /**
- * ChatInterface.jsx
- * Main container for the AI Chat Interface app.
- * Handles layout, state, and integration of all chat UI components.
+ * @file ChatInterface.jsx
+ * @description Main container component for the AI Chat Interface application.
+ * Handles layout, state management, and integration of all chat UI components.
+ * Implements responsive design with mobile-first approach using Tailwind CSS.
+ *
+ * @component ChatInterface
+ * @requires React
+ * @requires MessageList
+ * @requires MessageInput
+ * @requires SettingsPanel
+ * @requires useChat
+ *
+ * @features
+ * - Responsive layout (mobile: stack, desktop: sidebar)
+ * - Settings panel (mobile: drawer, desktop: sidebar)
+ * - Real-time chat interface
+ * - Loading and error states
+ * - Demo mode support
+ *
+ * @state
+ * - drawerOpen: boolean - Controls mobile settings drawer visibility
+ *
+ * @props
+ * None - Uses useChat hook for state management
+ *
+ * @example
+ * ```jsx
+ * <ChatInterface />
+ * ```
  */
 import { useState } from 'react';
 import MessageList from './MessageList';
@@ -124,7 +150,7 @@ const ChatInterface = () => {
       )}
 
       {error && (
-        <div 
+        <div
           className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-lg z-50 cursor-pointer"
           onClick={clearError}
         >
@@ -135,4 +161,4 @@ const ChatInterface = () => {
   );
 };
 
-export default ChatInterface; 
+export default ChatInterface;

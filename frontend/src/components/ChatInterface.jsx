@@ -33,8 +33,36 @@ import { useState } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import SettingsPanel from './SettingsPanel';
-import { Cog6ToothIcon, XMarkIcon } from '@heroicons/react/outline';
+import { Cog6ToothIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import useChat from '../hooks/useChat';
+
+const LoadingSpinner = () => (
+  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+);
+
+const LoadingOverlay = () => (
+  <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
+    <div className="bg-white px-8 py-6 rounded-xl shadow-2xl flex flex-col items-center space-y-4">
+      <LoadingSpinner />
+      <p className="text-lg font-medium text-gray-700">Processing your request...</p>
+    </div>
+  </div>
+);
+
+const ErrorMessage = ({ message, onDismiss }) => (
+  <div
+    className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-lg z-50 cursor-pointer transform transition-all duration-300 hover:scale-105"
+    onClick={onDismiss}
+    role="alert"
+  >
+    <div className="flex items-center space-x-2">
+      <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+      </svg>
+      <p>{message}</p>
+    </div>
+  </div>
+);
 
 const ChatInterface = () => {
   // Use the chat hook for state management and API communication
@@ -73,7 +101,7 @@ const ChatInterface = () => {
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">AI Chat Interface</h1>
         {/* Settings button for mobile */}
         <button
-          className="md:hidden p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400"
+          className="md:hidden p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-colors duration-200"
           aria-label="Open settings"
           onClick={() => setDrawerOpen(true)}
         >
@@ -109,54 +137,42 @@ const ChatInterface = () => {
       </main>
 
       {/* Mobile Settings Drawer */}
-      {drawerOpen && (
-        <>
-          {/* Overlay */}
-          <div
-            className="fixed inset-0 bg-black bg-opacity-30 z-40 transition-opacity duration-200"
+      <div
+        className={`fixed inset-0 bg-black transition-opacity duration-300 z-40 ${
+          drawerOpen ? 'bg-opacity-30' : 'bg-opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setDrawerOpen(false)}
+        aria-label="Close settings drawer"
+        tabIndex={-1}
+      />
+      <div
+        className={`fixed top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-lg z-50 flex flex-col p-6 transition-transform duration-300 transform ${
+          drawerOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">Settings</h2>
+          <button
+            className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-colors duration-200"
+            aria-label="Close settings"
             onClick={() => setDrawerOpen(false)}
-            aria-label="Close settings drawer"
-            tabIndex={-1}
-          />
-          {/* Drawer */}
-          <div className="fixed top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-lg z-50 flex flex-col p-6 transition-transform duration-300 transform translate-x-0">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Settings</h2>
-              <button
-                className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-400"
-                aria-label="Close settings"
-                onClick={() => setDrawerOpen(false)}
-              >
-                <XMarkIcon className="h-6 w-6 text-gray-700" />
-              </button>
-            </div>
-            <SettingsPanel
-              apiKey={apiKey}
-              onApiKeyChange={handleApiKeyChange}
-              model={model}
-              onModelChange={setModel}
-              demoMode={demoMode}
-              onDemoModeToggle={toggleDemoMode}
-            />
-          </div>
-        </>
-      )}
+          >
+            <XMarkIcon className="h-6 w-6 text-gray-700" />
+          </button>
+        </div>
+        <SettingsPanel
+          apiKey={apiKey}
+          onApiKeyChange={handleApiKeyChange}
+          model={model}
+          onModelChange={setModel}
+          demoMode={demoMode}
+          onDemoModeToggle={toggleDemoMode}
+        />
+      </div>
 
       {/* Loading and Error States */}
-      {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white px-6 py-4 rounded-lg shadow-lg text-lg font-medium">Loading...</div>
-        </div>
-      )}
-
-      {error && (
-        <div
-          className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-lg z-50 cursor-pointer"
-          onClick={clearError}
-        >
-          {error}
-        </div>
-      )}
+      {isLoading && <LoadingOverlay />}
+      {error && <ErrorMessage message={error} onDismiss={clearError} />}
     </div>
   );
 };

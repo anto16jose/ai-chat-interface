@@ -2,7 +2,7 @@
  * useChat.js
  * Custom hook for managing chat state and API communication.
  * Handles messages, settings, loading states, and API interactions.
- * 
+ *
  * @returns {Object} Chat interface state and functions
  */
 import { useState, useCallback } from 'react';
@@ -10,6 +10,31 @@ import axios from 'axios';
 
 // API endpoint configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
+const DEMO_TOKENS_PER_MESSAGE = 60;
+const DEMO_PROMPT_TOKENS = 10;
+const DEMO_COMPLETION_TOKENS = 50;
+const DEMO_PRICING = {
+  'gpt-3.5-turbo': {
+    input: 0.0015,  // $0.0015 per 1K tokens
+    output: 0.002   // $0.002 per 1K tokens
+  },
+  'gpt-4': {
+    input: 0.03,    // $0.03 per 1K tokens
+    output: 0.06    // $0.06 per 1K tokens
+  }
+};
+
+function estimatePromptTokens(text) {
+  return Math.max(1, Math.ceil(text.length / 4));
+}
+
+function calculateDemoCost(model, promptTokens, completionTokens) {
+  const pricing = DEMO_PRICING[model] || DEMO_PRICING['gpt-3.5-turbo'];
+  const inputCost = (promptTokens / 1000) * pricing.input;
+  const outputCost = (completionTokens / 1000) * pricing.output;
+  return inputCost + outputCost;
+}
 
 /**
  * Custom hook for chat functionality
@@ -25,6 +50,14 @@ const useChat = () => {
   const [apiKey, setApiKey] = useState('');
   const [model, setModel] = useState('gpt-3.5-turbo');
   const [demoMode, setDemoMode] = useState(false);
+
+  // Demo usage state
+  const [demoUsage, setDemoUsage] = useState({
+    promptTokens: 0,
+    completionTokens: 0,
+    totalTokens: 0,
+    cost: 0
+  });
 
   // Clear error state
   const clearError = useCallback(() => setError(null), []);
@@ -62,13 +95,31 @@ const useChat = () => {
 
     try {
       if (demoMode) {
-        // Simulate API delay in demo mode
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const demoResponse = {
-          role: 'assistant',
-          content: `This is a demo response. In the full version, this would be a response from ${model}.`
+        const promptTokens = estimatePromptTokens(content.trim());
+        const completionTokens = DEMO_COMPLETION_TOKENS;
+        const totalTokens = promptTokens + completionTokens;
+        const cost = +calculateDemoCost(model, promptTokens, completionTokens).toFixed(6);
+        const newUsage = {
+          promptTokens: demoUsage.promptTokens + promptTokens,
+          completionTokens: demoUsage.completionTokens + completionTokens,
+          totalTokens: demoUsage.totalTokens + totalTokens,
+          cost: +(demoUsage.cost + cost).toFixed(6)
         };
-        setMessages(prev => [...prev, demoResponse]);
+        setDemoUsage(newUsage);
+        setMessages(prev => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: `This is a demo response. In the full version, this would be a response from ${model}.`,
+            usage: {
+              promptTokens,
+              completionTokens,
+              totalTokens,
+              cost
+            }
+          }
+        ]);
       } else {
         if (!apiKey || !validateApiKey(apiKey)) {
           throw new Error('Please enter a valid OpenAI API key');
@@ -82,7 +133,8 @@ const useChat = () => {
 
         const assistantMessage = {
           role: 'assistant',
-          content: response.data.content
+          content: response.data.content,
+          usage: response.data.usage
         };
         setMessages(prev => [...prev, assistantMessage]);
       }
@@ -103,7 +155,7 @@ const useChat = () => {
   // Validate API key with backend
   const validateKeyWithBackend = useCallback(async (key) => {
     if (!key || !validateApiKey(key)) return false;
-    
+
     try {
       const response = await axios.post(`${API_BASE_URL}/validate-key`, { apiKey: key });
       return response.data.valid;
@@ -121,6 +173,7 @@ const useChat = () => {
     apiKey,
     model,
     demoMode,
+    demoUsage,
 
     // State setters
     setApiKey,
@@ -136,4 +189,4 @@ const useChat = () => {
   };
 };
 
-export default useChat; 
+export default useChat;

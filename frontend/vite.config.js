@@ -11,6 +11,18 @@ export default defineConfig({
       '/api': 'http://localhost:3000'
     }
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@heroicons/react', 'lucide-react']
+        }
+      }
+    }
+  },
   resolve: {
     alias: {
       crypto: 'crypto-js'

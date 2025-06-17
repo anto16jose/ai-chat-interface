@@ -39,7 +39,11 @@ const PORT = process.env.PORT || 3000;
 // Security middleware
 app.use(helmet()); // Security headers
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Vite default port
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:5173', // Vite default port
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null, // Vercel deployment
+    process.env.VERCEL_BRANCH_URL ? `https://${process.env.VERCEL_BRANCH_URL}` : null // Vercel preview deployments
+  ].filter(Boolean), // Remove null values
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

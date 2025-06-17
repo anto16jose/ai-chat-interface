@@ -10,10 +10,11 @@ describe('Chat API Endpoints', () => {
   beforeEach(() => {
     // Clear module cache to ensure fresh imports
     delete require.cache[require.resolve('../../utils/openai')];
+    delete require.cache[require.resolve('../../routes/chat')];
     
     openAIStub = mockOpenAIClient();
     
-    // Create stubs for the actual functions BEFORE requiring the app
+    // Create stubs for the actual functions BEFORE requiring the routes
     getChatCompletionStub = sinon.stub(require('../../utils/openai'), 'getChatCompletion');
     validateApiKeyStub = sinon.stub(require('../../utils/openai'), 'validateApiKey');
     
@@ -33,9 +34,9 @@ describe('Chat API Endpoints', () => {
     // Create a simple Express app for testing without starting the server
     const express = require('express');
     app = express();
-    app.use(require('express').json());
+    app.use(express.json());
     
-    // Import and use the routes
+    // Import and use the routes AFTER stubbing
     const chatRoutes = require('../../routes/chat');
     app.use('/api', chatRoutes);
     
@@ -54,6 +55,7 @@ describe('Chat API Endpoints', () => {
     sinon.restore();
     // Clear module cache after each test
     delete require.cache[require.resolve('../../utils/openai')];
+    delete require.cache[require.resolve('../../routes/chat')];
   });
 
   describe('POST /api/chat', () => {

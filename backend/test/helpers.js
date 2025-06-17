@@ -1,5 +1,6 @@
 const assert = require('assert');
 const sinon = require('sinon');
+const request = require('supertest');
 
 // Mock OpenAI responses
 const mockOpenAIResponses = {
@@ -59,62 +60,37 @@ const validateAPIResponse = (res, expectedStatus, expectedData = null) => {
   
   if (expectedData) {
     for (const [key, value] of Object.entries(expectedData)) {
-      assert.deepStrictEqual(res.data[key], value, `Expected ${key} to be ${JSON.stringify(value)}, got ${JSON.stringify(res.data[key])}`);
+      assert.deepStrictEqual(res.body[key], value, `Expected ${key} to be ${JSON.stringify(value)}, got ${JSON.stringify(res.body[key])}`);
     }
   }
 };
 
-// Helper to make HTTP requests using Node's built-in http module
+// Helper to make requests using supertest (works directly with Express apps)
 const makeRequest = async (app, method, path, data = null, headers = {}) => {
-  const http = require('http');
+  let req = request(app)[method.toLowerCase()](path);
   
-  return new Promise((resolve, reject) => {
-    const postData = data ? JSON.stringify(data) : '';
-    
-    const options = {
-      hostname: 'localhost',
-      port: 3000,
-      path: path,
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(postData),
-        ...headers
-      }
-    };
-
-    const req = http.request(options, (res) => {
-      let body = '';
-      res.on('data', (chunk) => {
-        body += chunk;
-      });
-      res.on('end', () => {
-        try {
-          const responseData = body ? JSON.parse(body) : {};
-          resolve({
-            status: res.statusCode,
-            data: responseData,
-            headers: res.headers
-          });
-        } catch (error) {
-          resolve({
-            status: res.statusCode,
-            data: body,
-            headers: res.headers
-          });
-        }
-      });
-    });
-
-    req.on('error', (error) => {
-      reject(error);
-    });
-
-    if (postData) {
-      req.write(postData);
-    }
-    req.end();
+  // Set headers
+  Object.entries(headers).forEach(([key, value]) => {
+    req = req.set(key, value);
   });
+  
+  // Set default content type if not provided
+  if (!headers['Content-Type']) {
+    req = req.set('Content-Type', 'application/json');
+  }
+  
+  // Send data if provided
+  if (data) {
+    req = req.send(data);
+  }
+  
+  const response = await req;
+  
+  return {
+    status: response.status,
+    data: response.body,
+    headers: response.headers
+  };
 };
 
 module.exports = {

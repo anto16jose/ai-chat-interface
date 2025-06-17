@@ -220,4 +220,4 @@ FRONTEND_URL=http://localhost:5173
 - 📋 Testing documentation
 - 📋 User guide
 
-<!-- Trigger clean Vercel redeploy after .vercel cleanup -->
+<!-- Trigger static-only Vercel redeploy after vercel.json rename -->

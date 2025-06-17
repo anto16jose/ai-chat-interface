@@ -219,3 +219,5 @@ FRONTEND_URL=http://localhost:5173
 - 📋 Deployment guide
 - 📋 Testing documentation
 - 📋 User guide
+
+<!-- Trigger clean Vercel redeploy after .vercel cleanup -->

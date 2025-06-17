@@ -8,9 +8,12 @@ describe('Chat API Endpoints', () => {
   let app;
 
   beforeEach(() => {
+    // Clear module cache to ensure fresh imports
+    delete require.cache[require.resolve('../../utils/openai')];
+    
     openAIStub = mockOpenAIClient();
     
-    // Create stubs for the actual functions
+    // Create stubs for the actual functions BEFORE requiring the app
     getChatCompletionStub = sinon.stub(require('../../utils/openai'), 'getChatCompletion');
     validateApiKeyStub = sinon.stub(require('../../utils/openai'), 'validateApiKey');
     
@@ -27,12 +30,30 @@ describe('Chat API Endpoints', () => {
     
     validateApiKeyStub.resolves(true);
     
-    // Require the app AFTER stubbing
-    app = require('../../server');
+    // Create a simple Express app for testing without starting the server
+    const express = require('express');
+    app = express();
+    app.use(require('express').json());
+    
+    // Import and use the routes
+    const chatRoutes = require('../../routes/chat');
+    app.use('/api', chatRoutes);
+    
+    // Add error handling middleware
+    app.use((err, req, res, next) => {
+      console.error(err.stack);
+      res.status(err.status || 500).json({
+        error: process.env.NODE_ENV === 'production'
+          ? 'An unexpected error occurred'
+          : err.message
+      });
+    });
   });
 
   afterEach(() => {
     sinon.restore();
+    // Clear module cache after each test
+    delete require.cache[require.resolve('../../utils/openai')];
   });
 
   describe('POST /api/chat', () => {
@@ -55,7 +76,8 @@ describe('Chat API Endpoints', () => {
     });
 
     it('should handle OpenAI API errors', async () => {
-      getChatCompletionStub.rejects(mockOpenAIResponses.error);
+      // Ensure the stub is set to reject before making the request
+      getChatCompletionStub.rejects(new Error('OpenAI API Error'));
 
       const validRequest = {
         message: 'Hello',
@@ -88,6 +110,7 @@ describe('Chat API Endpoints', () => {
 
   describe('POST /api/validate-key', () => {
     it('should reject an invalid API key', async () => {
+      // Ensure the stub is set to return false before making the request
       validateApiKeyStub.resolves(false);
 
       const res = await makeRequest(app, 'POST', '/api/validate-key', { apiKey: mockEnv.OPENAI_API_KEY });

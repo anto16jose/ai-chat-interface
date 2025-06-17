@@ -1,12 +1,12 @@
-# AI Chat Interface - Vercel Deployment & Project Management Guide
+# AI Chat Interface - Vercel Monorepo Deployment Guide
 
 ## Project Context
 
 ### Current Project State
 - **Phase**: 2 (Development & Presentation)
-- **Status**: Core functionality implemented, preparing for deployment
+- **Status**: Core functionality implemented, ready for deployment
 - **Repository**: GitHub repository with full-stack React + Express application
-- **Environment**: Development environment running locally
+- **Deployment Strategy**: **Monorepo** (recommended for academic projects)
 
 ### Technical Stack
 - **Frontend**: React + Vite + Tailwind CSS
@@ -31,324 +31,344 @@
    - Demo mode responses
    - Rate limiting and CORS protection
 
-3. **Testing (🔄 In Progress)**
-   - Frontend unit tests with Vitest
-   - Backend API tests with Mocha
-   - E2E tests with Cypress
-   - Test coverage reporting
+## Why Monorepo Deployment?
 
-4. **Documentation (🔄 In Progress)**
-   - README.md needs completion
-   - Installation instructions pending
-   - Architecture documentation needed
-   - Deployment documentation (this guide)
+### Advantages for Your Project:
+1. **Simplified Management**: Single repository, single deployment pipeline
+2. **Cost Effective**: One Vercel project instead of two
+3. **Easier Environment Variables**: Centralized configuration
+4. **Better for Academic Projects**: Simpler for evaluation and demonstration
+5. **Your Current Setup**: Your `vercel.json` is already configured for monorepo deployment
 
-## Vercel Deployment Requirements
+## Current Vercel Configuration Analysis
 
-### Project Structure for Vercel
-```
-ai-chat-interface/
-├── frontend/                 # Vercel will deploy this
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   ├── vite.config.js
-│   └── vercel.json          # Vercel configuration
-├── backend/                 # Separate deployment
-│   ├── routes/
-│   ├── middleware/
-│   ├── utils/
-│   ├── package.json
-│   └── server.js
-└── README.md
-```
+Your existing `vercel.json` is correctly configured for monorepo deployment:
 
-### Environment Variables Needed
-1. **Frontend (.env)**
-   ```
-   VITE_API_URL=https://your-backend-url.vercel.app
-   VITE_DEMO_MODE_ENABLED=true
-   ```
-
-2. **Backend (.env)**
-   ```
-   PORT=3000
-   NODE_ENV=production
-   CORS_ORIGIN=https://your-frontend-url.vercel.app
-   RATE_LIMIT_WINDOW_MS=900000
-   RATE_LIMIT_MAX_REQUESTS=100
-   ```
-
-### Vercel Configuration Files
-
-1. **Frontend (vercel.json)**
-   ```json
-   {
-     "buildCommand": "npm run build",
-     "outputDirectory": "dist",
-     "framework": "vite",
-     "rewrites": [
-       {
-         "source": "/api/:path*",
-         "destination": "https://your-backend-url.vercel.app/api/:path*"
-       }
-     ],
-     "headers": [
-       {
-         "source": "/(.*)",
-         "headers": [
-           {
-             "key": "X-Content-Type-Options",
-             "value": "nosniff"
-           },
-           {
-             "key": "X-Frame-Options",
-             "value": "DENY"
-           },
-           {
-             "key": "X-XSS-Protection",
-             "value": "1; mode=block"
-           }
-         ]
-       }
-     ]
-   }
-   ```
-
-2. **Backend (vercel.json)**
-   ```json
-   {
-     "version": 2,
-     "builds": [
-       {
-         "src": "server.js",
-         "use": "@vercel/node"
-       }
-     ],
-     "routes": [
-       {
-         "src": "/api/(.*)",
-         "dest": "server.js"
-       }
-     ],
-     "env": {
-       "NODE_ENV": "production"
-     }
-   }
-   ```
-
-## Deployment Steps
-
-### 1. Frontend Deployment
-1. Create Vercel account and install Vercel CLI
-2. Initialize Git repository if not already done
-3. Push code to GitHub
-4. Connect Vercel to GitHub repository
-5. Configure build settings:
-   - Framework Preset: Vite
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
-   - Install Command: `npm install`
-6. Set environment variables in Vercel dashboard
-7. Deploy and verify frontend URL
-
-### 2. Backend Deployment
-1. Create separate Vercel project for backend
-2. Configure as Node.js project
-3. Set environment variables
-4. Deploy and verify backend URL
-5. Update frontend environment variables with backend URL
-
-### 3. Post-Deployment Verification
-1. Test all API endpoints
-2. Verify CORS configuration
-3. Check security headers
-4. Test demo mode
-5. Verify rate limiting
-6. Check error handling
-7. Test responsive design
-
-## CI/CD Pipeline
-
-### GitHub Actions Workflow
-```yaml
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-          
-      - name: Install Dependencies
-        run: |
-          npm install
-          cd frontend && npm install
-          cd ../backend && npm install
-          
-      - name: Run Frontend Tests
-        run: |
-          cd frontend
-          npm run test
-          npm run test:coverage
-          
-      - name: Run Backend Tests
-        run: |
-          cd backend
-          npm run test
-          
-      - name: Run E2E Tests
-        run: |
-          cd frontend
-          npm run test:e2e
-          
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/dist/$1"
+    }
+  ]
+}
 ```
 
-## Monitoring & Maintenance
+This configuration:
+- Builds frontend from `frontend/package.json` using Vite
+- Serves backend API from `backend/server.js`
+- Routes `/api/*` requests to backend
+- Routes all other requests to frontend
 
-### Vercel Analytics
-1. Enable Vercel Analytics in dashboard
-2. Monitor:
-   - Page views
-   - Performance metrics
-   - Error rates
-   - API response times
+## Pre-Deployment Checklist
 
-### Error Tracking
-1. Set up error logging
-2. Monitor API errors
-3. Track rate limiting events
-4. Log security incidents
+### 1. Code Preparation
+- [ ] All code is committed to GitHub
+- [ ] No sensitive data in code (API keys, etc.)
+- [ ] Environment variables are properly configured
+- [ ] Frontend API URL is set to relative path or environment variable
+- [ ] Backend CORS is configured for production
 
-### Performance Optimization
-1. Enable Vercel Edge Functions if needed
-2. Configure caching headers
-3. Optimize bundle size
-4. Monitor API response times
+### 2. Environment Variables Needed
+Create these in Vercel dashboard after deployment:
 
-## Security Considerations
+**Frontend Environment Variables:**
+```
+VITE_API_URL=https://your-vercel-domain.vercel.app/api
+```
 
-### API Security
-1. CORS configuration
-2. Rate limiting
-3. API key validation
-4. Input sanitization
-5. Error message security
+**Backend Environment Variables:**
+```
+NODE_ENV=production
+FRONTEND_URL=https://your-vercel-domain.vercel.app
+```
 
-### Environment Variables
-1. Never expose in frontend
-2. Use Vercel's environment variable system
-3. Rotate keys regularly
-4. Monitor for exposure
+### 3. Required Updates Before Deployment
+
+#### Update Frontend API Configuration
+Your frontend currently uses `http://localhost:3000/api` as fallback. For production, update `frontend/src/hooks/useChat.js`:
+
+```javascript
+// Change this line:
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
+// To this (for production):
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+```
+
+#### Update Backend CORS Configuration
+Your backend CORS is already configured to use environment variables, which is perfect.
+
+## Step-by-Step Deployment Process
+
+### Step 1: Prepare Your Repository
+1. **Ensure all code is committed:**
+   ```bash
+   git add .
+   git commit -m "feat: prepare for Vercel deployment"
+   git push origin main
+   ```
+
+2. **Verify your repository is public** (required for Vercel free tier)
+
+### Step 2: Create Vercel Account
+1. Go to [vercel.com](https://vercel.com)
+2. Sign up with your GitHub account
+3. Complete email verification
+
+### Step 3: Deploy to Vercel
+
+#### Option A: Deploy via Vercel Dashboard (Recommended)
+1. **Import Project:**
+   - Click "New Project" in Vercel dashboard
+   - Select "Import Git Repository"
+   - Choose your `ai-chat-interface` repository
+   - Click "Import"
+
+2. **Configure Project Settings:**
+   - **Framework Preset**: Select "Other" (since it's a monorepo)
+   - **Root Directory**: Leave as `/` (root)
+   - **Build Command**: Leave empty (Vercel will use your `vercel.json`)
+   - **Output Directory**: Leave empty (Vercel will use your `vercel.json`)
+   - **Install Command**: `npm run install:all`
+
+3. **Set Environment Variables:**
+   - Click "Environment Variables" section
+   - Add the following variables:
+     ```
+     VITE_API_URL = https://your-project-name.vercel.app/api
+     NODE_ENV = production
+     FRONTEND_URL = https://your-project-name.vercel.app
+     ```
+
+4. **Deploy:**
+   - Click "Deploy"
+   - Wait for build to complete (usually 2-3 minutes)
+
+#### Option B: Deploy via Vercel CLI
+1. **Install Vercel CLI:**
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Login to Vercel:**
+   ```bash
+   vercel login
+   ```
+
+3. **Deploy:**
+   ```bash
+   vercel
+   ```
+
+4. **Follow prompts:**
+   - Link to existing project or create new
+   - Confirm settings
+   - Set environment variables when prompted
+
+### Step 4: Post-Deployment Configuration
+
+#### Update Environment Variables
+After deployment, update the `VITE_API_URL` with your actual domain:
+
+1. Go to your Vercel project dashboard
+2. Navigate to "Settings" → "Environment Variables"
+3. Update `VITE_API_URL` to your actual domain:
+   ```
+   VITE_API_URL = https://your-actual-domain.vercel.app/api
+   ```
+4. Redeploy the project
+
+#### Verify Deployment
+1. **Test Frontend:**
+   - Visit your Vercel URL
+   - Verify the chat interface loads
+   - Test responsive design
+
+2. **Test Backend:**
+   - Visit `https://your-domain.vercel.app/api/chat`
+   - Should return a 404 or error (not a connection error)
+
+3. **Test Demo Mode:**
+   - Enable demo mode in settings
+   - Send a test message
+   - Verify demo response works
+
+4. **Test API Integration:**
+   - Enter a valid OpenAI API key
+   - Send a test message
+   - Verify real API integration works
+
+## Vercel Dashboard Actions Required
+
+### 1. Project Settings
+- **Domain**: Your project will get a `.vercel.app` domain
+- **Custom Domain**: Optional - you can add a custom domain later
+- **Team**: Ensure you're in the correct team/account
+
+### 2. Environment Variables
+Navigate to **Settings** → **Environment Variables** and add:
+
+| Name | Value | Environment |
+|------|-------|-------------|
+| `VITE_API_URL` | `https://your-domain.vercel.app/api` | Production |
+| `NODE_ENV` | `production` | Production |
+| `FRONTEND_URL` | `https://your-domain.vercel.app` | Production |
+
+### 3. Build Settings
+- **Framework Preset**: Other
+- **Build Command**: (leave empty - uses vercel.json)
+- **Output Directory**: (leave empty - uses vercel.json)
+- **Install Command**: `npm run install:all`
+
+### 4. Functions Settings
+- **Node.js Version**: 18.x (recommended)
+- **Max Duration**: 10 seconds (default)
+- **Memory**: 1024 MB (default)
+
+### 5. Security Settings
+- **Password Protection**: Disabled (for public access)
+- **CORS**: Already configured in your backend
+
+## Testing Your Deployment
+
+### 1. Basic Functionality Tests
+- [ ] Frontend loads without errors
+- [ ] Responsive design works on mobile
+- [ ] Settings panel opens and closes
+- [ ] Demo mode toggle works
+- [ ] API key input accepts valid keys
+
+### 2. Chat Functionality Tests
+- [ ] Demo mode sends responses
+- [ ] Real API mode works with valid key
+- [ ] Error handling displays properly
+- [ ] Message history persists during session
+- [ ] Clear chat functionality works
+
+### 3. API Endpoint Tests
+- [ ] `/api/chat` responds correctly
+- [ ] `/api/validate-key` validates keys
+- [ ] Rate limiting works
+- [ ] CORS headers are present
+- [ ] Security headers are set
+
+### 4. Performance Tests
+- [ ] Page loads within 3 seconds
+- [ ] API responses are under 5 seconds
+- [ ] No console errors
+- [ ] Mobile performance is acceptable
+
+## Troubleshooting Common Issues
+
+### 1. Build Failures
+**Problem**: Build fails during deployment
+**Solution**:
+- Check build logs in Vercel dashboard
+- Ensure all dependencies are in `package.json`
+- Verify `npm run install:all` works locally
+
+### 2. API Connection Issues
+**Problem**: Frontend can't connect to backend
+**Solution**:
+- Verify `VITE_API_URL` environment variable is set correctly
+- Check that backend routes are working
+- Ensure CORS is configured properly
+
+### 3. Environment Variables Not Working
+**Problem**: Environment variables not accessible
+**Solution**:
+- Redeploy after setting environment variables
+- Check variable names match exactly
+- Verify environment (Production/Preview) is correct
+
+### 4. CORS Errors
+**Problem**: Browser shows CORS errors
+**Solution**:
+- Verify `FRONTEND_URL` environment variable is set
+- Check backend CORS configuration
+- Ensure frontend and backend are on same domain
 
 ## Assignment Requirements Compliance
 
-### Critical Features
-1. ✅ Two dynamic aspects (Chat + Settings)
-2. ✅ Responsive design
-3. ✅ Frontend-backend communication
-4. ✅ Working application (not mockups)
-5. ✅ Demo mode for evaluation
-6. ✅ GitHub repository
-7. ✅ Documentation
+### Critical Features Verified:
+- [x] Two dynamic aspects (Chat + Settings)
+- [x] Responsive design
+- [x] Frontend-backend communication
+- [x] Working application (not mockups)
+- [x] Demo mode for evaluation
+- [x] GitHub repository
+- [x] Documentation
 
-### Presentation Requirements
-1. Live demo capability
-2. Demo mode for evaluators
-3. Responsive design showcase
-4. Security measures explanation
-5. Architecture overview
+### Presentation Requirements:
+- [x] Live demo capability
+- [x] Demo mode for evaluators
+- [x] Responsive design showcase
+- [x] Security measures explanation
+- [x] Architecture overview
 
-## Next Steps
+## Next Steps After Deployment
 
-1. **Immediate Actions**
-   - [ ] Create Vercel account
-   - [ ] Set up GitHub repository
-   - [ ] Configure environment variables
-   - [ ] Deploy frontend
-   - [ ] Deploy backend
-   - [ ] Test end-to-end
+### 1. Documentation Updates
+- [ ] Update README.md with deployment URL
+- [ ] Add deployment instructions
+- [ ] Document environment variables
+- [ ] Create user guide
 
-2. **Documentation**
-   - [ ] Update README.md
-   - [ ] Document deployment process
-   - [ ] Create user guide
-   - [ ] Add architecture diagrams
+### 2. Testing & Validation
+- [ ] Run all tests in production environment
+- [ ] Verify demo mode works for evaluators
+- [ ] Test error scenarios
+- [ ] Check responsive design on various devices
 
-3. **Testing**
-   - [ ] Run all tests in production environment
-   - [ ] Verify demo mode
-   - [ ] Test error scenarios
-   - [ ] Check responsive design
+### 3. Presentation Preparation
+- [ ] Prepare live demo script
+- [ ] Document security measures
+- [ ] Create architecture slides
+- [ ] Record demo video
 
-4. **Presentation**
-   - [ ] Prepare deployment showcase
-   - [ ] Document security measures
-   - [ ] Create architecture slides
-   - [ ] Record demo video
+### 4. Monitoring Setup
+- [ ] Enable Vercel Analytics
+- [ ] Set up error tracking
+- [ ] Monitor API usage
+- [ ] Track performance metrics
 
-## Troubleshooting Guide
+## Support Resources
 
-### Common Issues
-1. CORS errors
-   - Check CORS_ORIGIN in backend
-   - Verify frontend URL in Vercel
+### Vercel Documentation
+- [Vercel Documentation](https://vercel.com/docs)
+- [Vercel CLI Guide](https://vercel.com/docs/cli)
+- [Environment Variables](https://vercel.com/docs/projects/environment-variables)
 
-2. API connection issues
-   - Verify API_URL in frontend
-   - Check backend deployment status
-   - Test API endpoints directly
+### Project Resources
+- [GitHub Repository](your-repo-url)
+- [Project README](README.md)
+- [Development Guide](instructions/)
 
-3. Environment variables
-   - Verify in Vercel dashboard
-   - Check .env files
-   - Restart deployments
+### Contact & Support
+- Vercel Support: [support.vercel.com](https://support.vercel.com)
+- GitHub Issues: Use your repository's issue tracker
+- Project Documentation: Check `docs/` directory
 
-4. Build failures
-   - Check build logs
-   - Verify dependencies
-   - Test locally first
+---
 
-### Support Resources
-1. Vercel Documentation
-2. GitHub Issues
-3. Stack Overflow
-4. Project README
-5. This deployment guide
-
-## Contact & Support
-
-For deployment issues:
-1. Check Vercel status page
-2. Review deployment logs
-3. Contact Vercel support
-4. Consult project documentation
-
-For project-specific issues:
-1. Review GitHub issues
-2. Check project documentation
-3. Consult development team
-4. Review error logs 
+**Note**: This deployment guide is specifically tailored for your AI Chat Interface project and assumes monorepo deployment. For separate frontend/backend deployments, refer to Vercel's official documentation for more complex setups. 

@@ -22,12 +22,8 @@
     "openai": "^5.3.0"
   },
   "devDependencies": {
-    "axios": "^1.9.0",
-    "chai": "^5.1.0",
-    "chai-http": "^4.4.0",
     "mocha": "^10.3.0",
     "nodemon": "^3.1.10",
-    "sinon": "^17.0.1",
-    "supertest": "^6.3.4"
+    "sinon": "^17.0.1"
   }
 }

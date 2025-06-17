@@ -1,9 +1,5 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
+const assert = require('assert');
 const sinon = require('sinon');
-const { expect } = chai;
-
-chai.use(chaiHttp);
 
 // Mock OpenAI responses
 const mockOpenAIResponses = {
@@ -13,7 +9,12 @@ const mockOpenAIResponses = {
         role: 'assistant',
         content: 'This is a test response'
       }
-    }]
+    }],
+    usage: {
+      prompt_tokens: 10,
+      completion_tokens: 20,
+      total_tokens: 30
+    }
   },
   error: new Error('OpenAI API Error'),
   rateLimit: {
@@ -26,14 +27,15 @@ const mockOpenAIResponses = {
 const mockEnv = {
   PORT: 3000,
   NODE_ENV: 'test',
-  OPENAI_API_KEY: 'test-api-key',
+  OPENAI_API_KEY: 'sk-test-key-1234567890abcdefghijklmnopqrstuvwxyz',
   RATE_LIMIT_WINDOW_MS: 900000,
   RATE_LIMIT_MAX_REQUESTS: 100
 };
 
 // Helper to create test server
 const createTestServer = (app) => {
-  return chai.request(app).keepOpen();
+  // Not used anymore, but kept for compatibility
+  return null;
 };
 
 // Helper to mock OpenAI client
@@ -43,24 +45,84 @@ const mockOpenAIClient = (response = mockOpenAIResponses.success) => {
       completions: {
         create: sinon.stub().resolves(response)
       }
+    },
+    models: {
+      list: sinon.stub().resolves({ data: [] })
     }
   };
   return openAIStub;
 };
 
 // Helper to validate API response
-const validateAPIResponse = (res, status, data) => {
-  expect(res).to.have.status(status);
-  if (data) {
-    expect(res.body).to.deep.include(data);
+const validateAPIResponse = (res, expectedStatus, expectedData = null) => {
+  assert.strictEqual(res.status, expectedStatus, `Expected status ${expectedStatus}, got ${res.status}`);
+  
+  if (expectedData) {
+    for (const [key, value] of Object.entries(expectedData)) {
+      assert.deepStrictEqual(res.data[key], value, `Expected ${key} to be ${JSON.stringify(value)}, got ${JSON.stringify(res.data[key])}`);
+    }
   }
 };
 
+// Helper to make HTTP requests using Node's built-in http module
+const makeRequest = async (app, method, path, data = null, headers = {}) => {
+  const http = require('http');
+  
+  return new Promise((resolve, reject) => {
+    const postData = data ? JSON.stringify(data) : '';
+    
+    const options = {
+      hostname: 'localhost',
+      port: 3000,
+      path: path,
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData),
+        ...headers
+      }
+    };
+
+    const req = http.request(options, (res) => {
+      let body = '';
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+      res.on('end', () => {
+        try {
+          const responseData = body ? JSON.parse(body) : {};
+          resolve({
+            status: res.statusCode,
+            data: responseData,
+            headers: res.headers
+          });
+        } catch (error) {
+          resolve({
+            status: res.statusCode,
+            data: body,
+            headers: res.headers
+          });
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      reject(error);
+    });
+
+    if (postData) {
+      req.write(postData);
+    }
+    req.end();
+  });
+};
+
 module.exports = {
-  expect,
+  assert,
   mockOpenAIResponses,
   mockEnv,
   createTestServer,
   mockOpenAIClient,
-  validateAPIResponse
+  validateAPIResponse,
+  makeRequest
 }; 

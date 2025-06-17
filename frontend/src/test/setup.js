@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
-import { afterEach } from 'vitest';
+import { afterEach, beforeAll, afterAll } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
 
 // Cleanup after each test
 afterEach(() => {
@@ -18,4 +19,7 @@ beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => server.resetHandlers());
 
 // Close server after all tests
-afterAll(() => server.close()); 
+afterAll(() => server.close());
+
+// Export MSW utilities for tests
+export { http, HttpResponse }; 

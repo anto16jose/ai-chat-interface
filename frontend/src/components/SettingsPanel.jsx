@@ -71,9 +71,10 @@ const SettingsPanel = ({
   return (
     <div className="flex flex-col gap-6 w-full max-w-md mx-auto md:mx-0">
       <div>
-        <label className="block text-xs font-semibold text-gray-600 mb-1">OpenAI API Key</label>
+        <label htmlFor="api-key-input" className="block text-xs font-semibold text-gray-600 mb-1">OpenAI API Key</label>
         <div className="relative flex items-center">
           <input
+            id="api-key-input"
             type={showKey ? 'text' : 'password'}
             className="w-full rounded-lg border border-gray-300 p-2 pr-16 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 text-text-primary placeholder-text-primary placeholder:text-text-primary"
             placeholder="sk-..."
@@ -96,8 +97,9 @@ const SettingsPanel = ({
       </div>
 
       <div>
-        <label className="block text-xs font-semibold text-gray-600 mb-1">Model</label>
+        <label htmlFor="model-select" className="block text-xs font-semibold text-gray-600 mb-1">Model</label>
         <select
+          id="model-select"
           className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100 text-text-primary"
           value={model}
           onChange={(e) => onModelChange(e.target.value)}
@@ -110,8 +112,9 @@ const SettingsPanel = ({
       </div>
 
       <div className="flex items-center gap-3 mt-2">
-        <label className="font-semibold text-xs text-gray-600">Demo Mode</label>
+        <label htmlFor="demo-mode-toggle" className="font-semibold text-xs text-gray-600">Demo Mode</label>
         <button
+          id="demo-mode-toggle"
           type="button"
           className={`relative w-12 h-6 rounded-full transition-colors duration-200 outline-none ring-2 ring-blue-200 ${demoMode ? 'bg-blue-500' : 'bg-gray-300'}`}
           onClick={onDemoModeToggle}

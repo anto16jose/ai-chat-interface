@@ -156,7 +156,12 @@ const ChatInterface = () => {
             onClick={() => setDrawerOpen(false)}
           ></div>
           {/* Drawer panel */}
-          <aside className="relative ml-auto w-4/5 max-w-xs bg-white h-full shadow-2xl flex flex-col animate-slide-in p-6">
+          <aside 
+            className="relative ml-auto w-4/5 max-w-xs bg-white h-full shadow-2xl flex flex-col animate-slide-in p-6"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="settings-title"
+          >
             <button
               className="absolute top-4 right-4 p-2 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
               onClick={() => setDrawerOpen(false)}
@@ -164,7 +169,7 @@ const ChatInterface = () => {
             >
               <XMarkIcon className="h-6 w-6 text-blue-600" />
             </button>
-            <h2 className="text-xl font-bold text-blue-700 mb-6 mt-6 tracking-tight">Settings</h2>
+            <h2 id="settings-title" className="text-xl font-bold text-blue-700 mb-6 mt-6 tracking-tight">Settings</h2>
             <SettingsPanel {...settingsPanelProps} totalCost={totalCost} />
           </aside>
         </div>

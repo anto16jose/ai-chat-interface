@@ -46,7 +46,10 @@ const MessageBubble = ({ message, index }) => {
       style={{ animationDelay: `${animationDelay}ms` }}
     >
       <div>
-        <ReactMarkdown>{message.content}</ReactMarkdown>
+        {isUser
+          ? <span>{message.content}</span>
+          : <ReactMarkdown>{message.content}</ReactMarkdown>
+        }
       </div>
       {message.usage && (
         <div className="mt-2 text-xs opacity-75">

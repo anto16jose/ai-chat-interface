@@ -31,6 +31,13 @@
 import { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
+const renderUserMessage = (content) =>
+  content.split(/(\s+)/).map((word, idx) =>
+    word.length > 20
+      ? <span key={idx} className="break-all">{word}</span>
+      : word
+  );
+
 const MessageBubble = ({ message, index }) => {
   const isUser = message.role === 'user';
   const animationDelay = index * 100; // Stagger animations
@@ -47,7 +54,7 @@ const MessageBubble = ({ message, index }) => {
     >
       <div>
         {isUser
-          ? <span className="inline-block break-words">{message.content}</span>
+          ? <span className="inline-block break-words">{renderUserMessage(message.content)}</span>
           : <ReactMarkdown>{message.content}</ReactMarkdown>
         }
       </div>

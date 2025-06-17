@@ -47,7 +47,7 @@ const MessageBubble = ({ message, index }) => {
     >
       <div>
         {isUser
-          ? <span>{message.content}</span>
+          ? <div className="w-full break-words">{message.content}</div>
           : <ReactMarkdown>{message.content}</ReactMarkdown>
         }
       </div>

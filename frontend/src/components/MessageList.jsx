@@ -61,7 +61,7 @@ const MessageBubble = ({ message, index }) => {
       {message.usage && (
         <div className="mt-2 text-xs opacity-75">
           <div>Tokens: {message.usage.totalTokens} (prompt: {message.usage.promptTokens}, completion: {message.usage.completionTokens})</div>
-          <div>Cost: ${message.usage.cost.toFixed(6)}</div>
+          <div>Cost: ${typeof message.usage.cost === 'number' ? message.usage.cost.toFixed(6) : 'N/A'}</div>
         </div>
       )}
     </div>

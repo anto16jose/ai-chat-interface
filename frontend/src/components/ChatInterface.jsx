@@ -78,7 +78,8 @@ const ChatInterface = () => {
     setDemoMode,
     sendMessage,
     clearError,
-    toggleDemoMode
+    toggleDemoMode,
+    demoUsage
   } = useChat();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -87,6 +88,12 @@ const ChatInterface = () => {
     sendMessage(content);
   };
 
+  // Calculate real and demo session costs
+  const realCost = messages
+    .filter(m => m.role === 'assistant' && m.usage && typeof m.usage.cost === 'number' && !demoMode)
+    .reduce((sum, m) => sum + m.usage.cost, 0);
+  const demoCost = demoUsage?.cost || 0;
+
   // SettingsPanel props
   const settingsPanelProps = {
     apiKey,
@@ -94,20 +101,17 @@ const ChatInterface = () => {
     model,
     onModelChange: setModel,
     demoMode,
-    onDemoModeToggle: toggleDemoMode
+    onDemoModeToggle: toggleDemoMode,
+    realCost,
+    demoCost
   };
-
-  // Calculate total session cost (sum of all assistant message costs)
-  const totalCost = messages
-    .filter(m => m.role === 'assistant' && m.usage && typeof m.usage.cost === 'number')
-    .reduce((sum, m) => sum + m.usage.cost, 0);
 
   return (
     <div className="h-screen w-full bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col md:flex-row">
       {/* Sidebar (Desktop) */}
       <aside className="hidden md:flex md:flex-col md:w-80 bg-white border-r border-gray-200 shadow-lg h-screen p-6 fixed top-0 left-0 z-30">
         <h2 className="text-xl font-bold text-blue-700 mb-6 tracking-tight">Settings</h2>
-        <SettingsPanel {...settingsPanelProps} totalCost={totalCost} />
+        <SettingsPanel {...settingsPanelProps} />
       </aside>
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col h-full md:ml-80">
@@ -170,7 +174,7 @@ const ChatInterface = () => {
               <XMarkIcon className="h-6 w-6 text-blue-600" />
             </button>
             <h2 id="settings-title" className="text-xl font-bold text-blue-700 mb-6 mt-6 tracking-tight">Settings</h2>
-            <SettingsPanel {...settingsPanelProps} totalCost={totalCost} />
+            <SettingsPanel {...settingsPanelProps} />
           </aside>
         </div>
       )}

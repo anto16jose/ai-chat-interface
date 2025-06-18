@@ -20,7 +20,8 @@
  * @param {Function} onModelChange - Handler for model changes
  * @param {boolean} demoMode - Whether demo mode is enabled
  * @param {Function} onDemoModeToggle - Handler for demo mode toggle
- * @param {number} totalCost - Total session cost
+ * @param {number} realCost - Total session cost
+ * @param {number} demoCost - Demo session cost
  *
  * @state
  * @param {boolean} showKey - Whether to show API key in plain text
@@ -35,7 +36,8 @@
  *   onModelChange={(model) => console.log(model)}
  *   demoMode={false}
  *   onDemoModeToggle={() => console.log('Toggle demo mode')}
- *   totalCost={0}
+ *   realCost={0}
+ *   demoCost={0}
  * />
  * ```
  */
@@ -53,7 +55,8 @@ const SettingsPanel = ({
   onModelChange = () => {},
   demoMode = false,
   onDemoModeToggle = () => {},
-  totalCost = 0,
+  realCost = 0,
+  demoCost = 0,
 }) => {
   const [showKey, setShowKey] = useState(false);
   const [keyError, setKeyError] = useState('');
@@ -128,7 +131,10 @@ const SettingsPanel = ({
       </div>
 
       <div className="mt-4 text-xs text-gray-700 font-semibold">
-        Total session cost: <span className="text-blue-700">${totalCost.toFixed(6)}</span>
+        Real API session cost: <span className="text-blue-700">${realCost.toFixed(6)}</span>
+      </div>
+      <div className="mt-1 text-xs text-gray-700 font-semibold">
+        Demo session cost: <span className="text-blue-700">${demoCost.toFixed(6)}</span>
       </div>
     </div>
   );

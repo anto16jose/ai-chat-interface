@@ -134,7 +134,7 @@ const SettingsPanel = ({
         Real API session cost: <span className="text-blue-700">${realCost.toFixed(6)}</span>
       </div>
       <div className="mt-1 text-xs text-gray-700 font-semibold">
-        Demo session cost: <span className="text-blue-700">${demoCost.toFixed(6)}</span>
+        Mock-up Demo session cost: <span className="text-blue-700">${demoCost.toFixed(6)}</span>
       </div>
     </div>
   );

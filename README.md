@@ -222,3 +222,5 @@ FRONTEND_URL=http://localhost:5173
 
 <!-- Trigger static-only Vercel redeploy after vercel.json rename -->
 # Test commit to trigger CI/CD pipeline
+
+# Second test commit after reconnecting to GitHub

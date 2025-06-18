@@ -51,14 +51,6 @@ const useChat = () => {
   const [model, setModel] = useState('gpt-3.5-turbo');
   const [demoMode, setDemoMode] = useState(false);
 
-  // Demo usage state
-  const [demoUsage, setDemoUsage] = useState({
-    promptTokens: 0,
-    completionTokens: 0,
-    totalTokens: 0,
-    cost: 0
-  });
-
   // Clear error state
   const clearError = useCallback(() => setError(null), []);
 
@@ -100,13 +92,6 @@ const useChat = () => {
         const completionTokens = DEMO_COMPLETION_TOKENS;
         const totalTokens = promptTokens + completionTokens;
         const cost = +calculateDemoCost(model, promptTokens, completionTokens).toFixed(6);
-        const newUsage = {
-          promptTokens: demoUsage.promptTokens + promptTokens,
-          completionTokens: demoUsage.completionTokens + completionTokens,
-          totalTokens: demoUsage.totalTokens + totalTokens,
-          cost: +(demoUsage.cost + cost).toFixed(6)
-        };
-        setDemoUsage(newUsage);
         setMessages(prev => [
           ...prev,
           {
@@ -117,7 +102,8 @@ const useChat = () => {
               completionTokens,
               totalTokens,
               cost
-            }
+            },
+            demo: true
           }
         ]);
       } else {
@@ -134,7 +120,8 @@ const useChat = () => {
         const assistantMessage = {
           role: 'assistant',
           content: response.data.content,
-          usage: response.data.usage
+          usage: response.data.usage,
+          demo: false
         };
         setMessages(prev => [...prev, assistantMessage]);
       }
@@ -173,7 +160,6 @@ const useChat = () => {
     apiKey,
     model,
     demoMode,
-    demoUsage,
 
     // State setters
     setApiKey,

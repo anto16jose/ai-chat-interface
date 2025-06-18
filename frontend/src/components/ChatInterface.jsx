@@ -90,9 +90,11 @@ const ChatInterface = () => {
 
   // Calculate real and demo session costs
   const realCost = messages
-    .filter(m => m.role === 'assistant' && m.usage && typeof m.usage.cost === 'number' && !demoMode)
+    .filter(m => m.role === 'assistant' && m.usage && typeof m.usage.cost === 'number' && m.demo === false)
     .reduce((sum, m) => sum + m.usage.cost, 0);
-  const demoCost = demoUsage?.cost || 0;
+  const demoCost = messages
+    .filter(m => m.role === 'assistant' && m.usage && typeof m.usage.cost === 'number' && m.demo === true)
+    .reduce((sum, m) => sum + m.usage.cost, 0);
 
   // SettingsPanel props
   const settingsPanelProps = {

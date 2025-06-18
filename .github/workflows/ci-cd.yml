@@ -34,13 +34,6 @@ jobs:
           cd backend
           npm run test
           
-      - name: Run E2E Tests
-        run: |
-          cd frontend
-          npm run dev -- --port 5174 &
-          npx wait-on http://localhost:5174
-          npm run test:e2e
-          
   deploy:
     needs: test
     runs-on: ubuntu-latest

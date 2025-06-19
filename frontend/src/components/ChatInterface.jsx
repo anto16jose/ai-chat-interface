@@ -119,7 +119,7 @@ const ChatInterface = () => {
       <div className="flex-1 flex flex-col h-full md:ml-80">
         {/* Header Bar */}
         <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm fixed top-0 left-0 w-full z-40">
-          <span className="text-2xl font-bold text-blue-700 tracking-tight">AI Chat</span>
+          <span className="text-2xl font-bold text-blue-700 tracking-tight">GPT Chat</span>
           {/* Settings button (mobile) */}
           <button
             className="md:hidden p-2 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"

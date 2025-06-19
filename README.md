@@ -10,121 +10,35 @@
 
 This project is developed as part of the **Project Java and Web Development (DLBCSPJWD01)** portfolio assignment at **IU International University**. The assignment follows a structured three-phase approach designed to demonstrate comprehensive understanding of modern full-stack web development principles.
 
-### 🎯 Assignment Overview
-
-**Student:** Nikolas Daniel Vincenti  
-**Course:** DLBCSPJWD01 - Project Java and Web Development  
-**Assignment Type:** Portfolio Project (3 Phases)  
-**Academic Year:** 2025  
-
-### 📋 Project Scope
-
-The assignment requires developing a **functioning web application** that demonstrates:
-
-- **Frontend Development**: Responsive user interface using modern frameworks
-- **Backend Integration**: Server-side communication and API handling
-- **Dynamic Functionality**: Interactive features and real-time user interaction
-- **Security Implementation**: Best practices for secure web development
-- **Documentation**: Professional code documentation and architecture explanation
-
-## 🔍 Project Concept
-
-### Privacy-First AI Chat Interface
-
-This application addresses the growing need for **secure AI assistance** while maintaining complete user privacy and cost transparency. Unlike traditional AI chat services, users provide their own OpenAI API keys, ensuring:
-
-- ✅ **Complete Privacy**: No conversations stored on third-party servers
-- ✅ **Cost Control**: Direct API usage with transparent pricing
-- ✅ **Security**: API keys handled through secure proxy patterns
-- ✅ **Flexibility**: Model selection (GPT-3.5-turbo, GPT-4) based on user needs
-
-### 🎯 Target Audience
-
-- **Developers** seeking coding assistance with privacy guarantees
-- **Students** requiring educational support without data concerns  
-- **Professionals** needing AI-powered content creation with cost control
-
-## 🏗️ Technical Requirements
-
-### Core Technologies
-- **Frontend**: React 18 + Vite + Tailwind CSS
-- **Backend**: Node.js + Express.js
-- **Integration**: OpenAI API
-- **Security**: Secure API proxy implementation
-
-### Assignment Criteria
-- ✅ **Two Dynamic Aspects**: Real-time chat + Settings management
-- ✅ **Responsive Design**: Mobile-first approach with Tailwind CSS
-- ✅ **Frontend-Backend Communication**: RESTful API integration
-- ✅ **Code Documentation**: Professional development standards
-- ✅ **Architecture Documentation**: Technical decision explanations
-
-## 📚 Learning Objectives
-
-This project demonstrates mastery of:
-
-### Technical Skills
-- **Modern React Development**: Functional components, hooks, state management
-- **Backend API Design**: Express.js routing, middleware, security implementation
-- **Full-Stack Integration**: Frontend-backend communication patterns
-- **Security Best Practices**: API key handling, input validation, rate limiting
-- **Responsive Web Design**: Mobile-first development with utility frameworks
-
-### Professional Skills
-- **Project Planning**: Three-phase development methodology
-- **Documentation**: Technical writing and code documentation
-- **Version Control**: Git workflow and GitHub repository management
-- **Presentation**: Technical communication and demo preparation
-
-## 🚀 Development Phases
-
-### Phase 1: Conception ✅
-- **Deliverable**: 1-page conceptual design document
-- **Focus**: Architecture planning, technology selection, user requirements
-- **Status**: Completed
-
-### Phase 2: Development & Presentation 🔄
-- **Deliverable**: 10-slide presentation + GitHub repository + 2-min demo
-- **Focus**: Core implementation, documentation, working prototype
-- **Status**: In Progress (MVP Complete)
-  - ✅ Core chat functionality implemented
-  - ✅ Settings management working
-  - ✅ Demo mode available for evaluation
-  - ✅ Responsive design implemented
-  - 🔄 Documentation in progress
-  - 🔄 Presentation materials pending
-  - 🔄 Final testing and polish needed
-
-### Phase 3: Finalization 📋
-- **Deliverable**: 2-page abstract + final submission + complete documentation
-- **Focus**: Optimization, final testing, comprehensive documentation
-- **Status**: Pending
-
-## 🎓 Educational Value
-
-This project serves as a **capstone experience** integrating knowledge from multiple areas:
-
-- **Software Engineering**: Architecture design, code organization, testing
-- **Web Technologies**: Modern framework usage, responsive design, API integration
-- **Security**: Authentication patterns, secure communication, data protection
-- **Project Management**: Agile methodology, documentation, presentation skills
-
-## 📝 Academic Evaluation
-
-The project is evaluated based on:
-- **Problem Solving** (10%): Clear scope and technical approach
-- **Methodology** (20%): Architecture decisions and technology choices  
-- **Implementation Quality** (40%): Code quality, documentation, functionality
-- **Creativity** (20%): Solution originality and objective fulfillment
-- **Formal Requirements** (10%): Submission compliance and documentation
-
-## 🤝 Academic Integrity
-
-This project represents original work completed as part of the IU International University curriculum. All external resources, libraries, and references are properly documented and attributed according to academic standards.
-
 ---
 
-**Note**: This README will be updated throughout the development phases to include implementation details, setup instructions, and deployment guidelines as the project progresses.
+## 🏗️ Architecture Overview
+
+```
+ai-chat-interface/
+├── frontend/                 # React + Vite + Tailwind
+│   ├── src/
+│   │   ├── components/       # React components
+│   │   ├── hooks/           # Custom React hooks  
+│   │   ├── utils/           # Utility functions
+│   │   ├── App.jsx          # Root component
+│   │   └── main.jsx         # Vite entry point
+├── backend/                 # Express API server
+│   ├── routes/              # API route definitions
+│   ├── middleware/          # Express middleware
+│   ├── utils/               # Backend utilities
+│   └── server.js            # Main server file
+├── docs/                    # Documentation
+├── instructions/            # Project instructions (READ ONLY)
+└── README.md               # Main project documentation
+```
+
+- **Frontend:** React 18, Vite, Tailwind CSS. All UI is mobile-first and responsive. Components are functional and use hooks for state management.
+- **Backend:** Node.js, Express.js. RESTful API with security middleware (CORS, Helmet, rate limiting, input validation). Never exposes API keys to frontend.
+- **Integration:** Frontend communicates with backend via REST API. Backend proxies requests to OpenAI securely.
+- **Demo Mode:** All chat features work without an API key for evaluation.
+
+---
 
 ## 🛠️ Installation & Setup
 
@@ -139,34 +53,25 @@ This project represents original work completed as part of the IU International 
    git clone https://github.com/NikVince/ai-chat-interface.git
    cd ai-chat-interface
    ```
-
 2. Install dependencies:
    ```bash
-   # Install root dependencies
    npm install
-   
-   # Install frontend dependencies
    cd frontend && npm install
-   
-   # Install backend dependencies
    cd ../backend && npm install
    ```
-
 3. Create environment files:
    ```bash
    # In backend directory
    cp .env.example .env
    # Edit .env with your configuration
    ```
-
 4. Start development servers:
    ```bash
    # From root directory
    npm run dev
    ```
-
 5. Access the application:
-   - Frontend: http://localhost:5173 (or next available port)
+   - Frontend: http://localhost:5173
    - Backend: http://localhost:3000
 
 ### Environment Variables
@@ -177,50 +82,98 @@ NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
 ```
 
-## 🎯 Current Features
+---
 
-### Core Functionality
-- ✅ Real-time chat interface with OpenAI integration
-- ✅ Settings management (API key, model selection)
-- ✅ Demo mode for evaluation without API key
-- ✅ Responsive design (mobile-first)
-- ✅ Secure API key handling
+## 🚀 Features
 
-### Technical Implementation
-- ✅ React functional components with hooks
-- ✅ Express backend with security middleware
-- ✅ RESTful API communication
-- ✅ Error handling and loading states
-- ✅ Rate limiting and CORS protection
+- Real-time chat interface with OpenAI integration
+- Settings management (API key, model selection)
+- **Demo mode** for evaluation without API key
+- Responsive design (mobile-first)
+- Secure API key handling (never exposed to frontend)
+- Error handling and loading states
+- Rate limiting and CORS protection
 
-### User Experience
-- ✅ Mobile-first responsive design
-- ✅ Intuitive chat interface
-- ✅ Settings persistence
-- ✅ Clear error messages
-- ✅ Loading state indicators
+---
 
-## 📝 Documentation Status
+## 🧪 Testing
 
-### Completed
-- ✅ Component documentation (JSDoc)
-- ✅ API endpoint documentation
-- ✅ Security implementation notes
-- ✅ Basic README structure
+### How to Run Tests
 
-### In Progress
-- 🔄 Comprehensive installation guide
-- 🔄 Architecture documentation
-- 🔄 API documentation
-- 🔄 Presentation materials
+#### Frontend
+- Uses [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/):
+  ```bash
+  cd frontend
+  npm run test
+  ```
+- **Coverage:**
+  - Main chat interface (`ChatInterface.jsx`) is tested for rendering, message submission, error handling, and settings toggling.
+  - No direct tests for all other components or hooks yet.
+  - No E2E (Cypress) tests present.
 
-### Pending
-- 📋 Final technical abstract
-- 📋 Deployment guide
-- 📋 Testing documentation
-- 📋 User guide
+#### Backend
+- Uses [Mocha](https://mochajs.org/) and [Sinon](https://sinonjs.org/):
+  ```bash
+  cd backend
+  npm test
+  ```
+- **Coverage:**
+  - API endpoints (`/api/chat`, `/api/validate-key`, `/api/models`) are tested for success, error, and validation scenarios.
+  - No direct tests for all middleware/utilities in isolation.
 
-<!-- Trigger static-only Vercel redeploy after vercel.json rename -->
-# Test commit to trigger CI/CD pipeline
+#### Summary
+- **Strengths:** Core chat flow and error handling are tested for both frontend and backend.
+- **Limitations:** No full coverage for all components, hooks, or edge cases. No E2E tests. For academic/portfolio purposes, this is sufficient, but more tests are recommended for production.
 
-# Second test commit after reconnecting to GitHub
+---
+
+## 🧑‍💻 Demo Mode
+
+- **Purpose:** Allows full evaluation of the chat interface without an OpenAI API key.
+- **How to Use:** Toggle "Demo Mode" in the settings panel. All chat features will work with simulated responses.
+- **Scenarios Covered:**
+  - Coding help
+  - General knowledge
+  - Error handling
+  - Different conversation flows
+- **Note:** Demo mode is critical for assignment evaluation and is available on first launch.
+
+---
+
+## ✅ Assignment Compliance Checklist
+
+- [x] Two dynamic aspects: Real-time chat + Settings management
+- [x] Responsive design: Mobile-first with Tailwind CSS
+- [x] Frontend-backend communication: RESTful API
+- [x] Functioning application: NOT mockups - actually works
+- [x] Demo mode: Tutors can evaluate without API keys
+- [x] GitHub repository: Professional, complete, public
+- [x] Security: API keys never exposed to frontend
+- [x] Documentation: JSDoc, README, architecture
+- [x] Error handling: User-friendly messages, loading states
+- [x] Quality gates: All core requirements tested and documented
+
+---
+
+## 📖 Known Limitations & Future Improvements
+
+- Add more unit and integration tests (components, hooks, backend utilities)
+- Implement E2E tests (Cypress)
+- Add error boundaries for all React components
+- Auto-save settings and chat history (session-based)
+- Improve accessibility (a11y) and ARIA labels
+- Add TypeScript types for stricter type safety
+- Polish UI/UX for edge cases and animations
+- Expand documentation (user guide, deployment)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! For major changes, please open an issue first to discuss what you would like to change. Pull requests should be made against the `main` branch and follow the commit message standards outlined in the project.
+
+---
+
+## 📝 Academic Integrity
+
+This project represents original work completed as part of the IU International University curriculum. All external resources, libraries, and references are properly documented and attributed according to academic standards.

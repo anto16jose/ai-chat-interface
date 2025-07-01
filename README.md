@@ -128,6 +128,12 @@ FRONTEND_URL=http://localhost:5173
 
 ---
 
+## 📝 Manual Test Cases
+
+A comprehensive manual test plan is available in [docs/test_cases.md](docs/test_cases.md). This checklist covers all user actions, features, error cases, demo mode, settings, export, and accessibility. Use it to verify the application works as expected.
+
+---
+
 ## 🧑‍💻 Demo Mode
 
 - **Purpose:** Allows full evaluation of the chat interface without an OpenAI API key.

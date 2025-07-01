@@ -56,44 +56,6 @@ const calculateCost = (model, promptTokens, completionTokens) => {
 };
 
 /**
- * Demo response templates for different conversation scenarios.
- * Used when demo mode is enabled to simulate AI responses without an API key.
- * Provides realistic responses for evaluation purposes.
- *
- * @constant {Object} DEMO_RESPONSES
- * @property {string[]} coding - Responses for programming-related queries
- * @property {string[]} general - Responses for general knowledge questions
- * @property {string[]} error - Responses for error scenarios or unclear queries
- *
- * @example
- * // Coding response
- * "Here's how you can implement that in JavaScript:\n```javascript\nconst example = () => {\n  console.log('Hello, World!');\n};\n```"
- *
- * // General response
- * "That's an interesting question! Let me explain..."
- *
- * // Error response
- * "I apologize, but I'm having trouble processing that request."
- */
-const DEMO_RESPONSES = {
-  coding: [
-    "Here's how you can implement that in JavaScript:\n```javascript\nconst example = () => {\n  console.log('Hello, World!');\n};\n```",
-    "For that React component, you'll want to use the `useState` hook:\n```jsx\nconst [state, setState] = useState(initialValue);\n```",
-    "To handle that API request, you can use async/await:\n```javascript\nasync function fetchData() {\n  const response = await fetch(url);\n  const data = await response.json();\n  return data;\n}\n```"
-  ],
-  general: [
-    "That's an interesting question! Let me explain...",
-    "Based on my understanding, there are a few key points to consider...",
-    "Here's what you need to know about that topic..."
-  ],
-  error: [
-    "I apologize, but I'm having trouble processing that request.",
-    "I'm not sure I understand. Could you rephrase that?",
-    "I'm currently in demo mode, so I can't access real-time data."
-  ]
-};
-
-/**
  * Creates an OpenAI client instance
  * Initializes the OpenAI SDK with the provided API key
  *

@@ -16,27 +16,60 @@ This project is developed as part of the **Project Java and Web Development (DLB
 
 ```
 ai-chat-interface/
-├── frontend/                 # React + Vite + Tailwind
+├── backend/                  # Express API server
+│   ├── middleware/           # Express middleware (e.g., validation)
+│   ├── routes/               # API route definitions (e.g., chat.js)
+│   ├── utils/                # Backend utilities (e.g., openai.js)
+│   ├── test/                 # Backend test helpers and route tests
+│   ├── tests/                # (empty/reserved for future tests)
+│   ├── node_modules/         # Backend dependencies
+│   ├── package.json          # Backend dependencies/config
+│   └── server.js             # Main server file
+├── frontend/                 # React + Vite + Tailwind frontend
 │   ├── src/
-│   │   ├── components/       # React components
-│   │   ├── hooks/           # Custom React hooks  
-│   │   ├── utils/           # Utility functions
-│   │   ├── App.jsx          # Root component
-│   │   └── main.jsx         # Vite entry point
-├── backend/                 # Express API server
-│   ├── routes/              # API route definitions
-│   ├── middleware/          # Express middleware
-│   ├── utils/               # Backend utilities
-│   └── server.js            # Main server file
-├── docs/                    # Documentation
-├── instructions/            # Project instructions (READ ONLY)
-└── README.md               # Main project documentation
+│   │   ├── components/       # React components (ChatInterface, MessageList, etc.)
+│   │   ├── hooks/            # Custom React hooks (useChat.js)
+│   │   ├── utils/            # Frontend utility functions
+│   │   ├── assets/           # Static assets (e.g., react.svg)
+│   │   ├── test/             # Frontend test setup
+│   │   ├── App.jsx           # Root component
+│   │   ├── main.jsx          # Vite entry point
+│   │   ├── App.css           # App-level styles (Tailwind only)
+│   │   └── index.css         # Tailwind base styles
+│   ├── public/               # Static public assets (favicons, manifest, etc.)
+│   ├── cypress/              # E2E test setup (fixtures, support, e2e)
+│   ├── dist/                 # Production build output
+│   ├── node_modules/         # Frontend dependencies
+│   ├── package.json          # Frontend dependencies/config
+│   ├── tailwind.config.js    # Tailwind CSS config
+│   ├── vite.config.js        # Vite config
+│   ├── vitest.config.js      # Vitest config
+│   ├── postcss.config.cjs    # PostCSS config
+│   └── README.md             # Frontend-specific documentation
+├── docs/                     # Project documentation (design, tests, deployment)
+├── docs_assignement/         # Assignment transcript and requirements
+├── docs_phase3/              # Phase 3 deliverables (abstract, screencast, etc.)
+├── instructions/             # Project instructions and checklists
+├── .github/                  # GitHub workflows and templates
+├── .vercel/                  # Vercel deployment config
+├── node_modules/             # Root dependencies (if any)
+├── package.json              # Root dependencies/config
+├── package-lock.json         # Root lockfile
+├── vercel.json               # Vercel monorepo deployment config
+├── env.example               # Example environment variables
+├── LICENSE                   # License file
+└── README.md                 # Main project documentation
 ```
 
-- **Frontend:** React 18, Vite, Tailwind CSS. All UI is mobile-first and responsive. Components are functional and use hooks for state management.
-- **Backend:** Node.js, Express.js. RESTful API with security middleware (CORS, Helmet, rate limiting, input validation). Never exposes API keys to frontend.
-- **Integration:** Frontend communicates with backend via REST API. Backend proxies requests to OpenAI securely.
-- **Demo Mode:** All chat features work without an API key for evaluation.
+- **Backend:** Node.js, Express.js. RESTful API, modular middleware, secure proxy for OpenAI, input validation, and rate limiting. All API endpoints are defined in `backend/routes/`.
+- **Frontend:** React 18, Vite, Tailwind CSS. Functional components, custom hooks, mobile-first responsive design, and all UI logic in `frontend/src/`.
+- **Testing:**
+  - **Frontend:** Unit tests (Vitest), E2E structure (Cypress)
+  - **Backend:** API and route tests (Mocha, helpers)
+- **Documentation:** All design, test, and deployment docs in `/docs`. Assignment and requirements in `/docs_assignement`. Phase 3 deliverables in `/docs_phase3`.
+- **Deployment:** Monorepo setup for Vercel, with configuration in `vercel.json` and `.vercel/`.
+
+> **For the architecture diagram and detailed design choices, see [docs/design_choices_and_changes.md](docs/design_choices_and_changes.md).**
 
 ---
 
@@ -84,7 +117,7 @@ FRONTEND_URL=http://localhost:5173
 
 ---
 
-## 🚀 Features
+## 🚀 Features (Summary)
 
 - Real-time chat interface with OpenAI integration
 - Settings management (API key, model selection)
@@ -93,44 +126,25 @@ FRONTEND_URL=http://localhost:5173
 - Secure API key handling (never exposed to frontend)
 - Error handling and loading states
 - Rate limiting and CORS protection
-- **Export Chat Transcript:** Users can export their current chat session as a downloadable text file. This feature demonstrates dynamic frontend-backend interaction: the frontend requests the transcript from the backend, which generates the file in real time. This satisfies the assignment's requirement for a second dynamic aspect (beyond chat and settings).
+- **Export Chat Transcript** (dynamic frontend-backend feature)
+
+> **For a full feature list and rationale, see [docs/design_choices_and_changes.md](docs/design_choices_and_changes.md).**
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing (Summary)
 
-### How to Run Tests
-
-#### Frontend
-- Uses [Vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/):
+- **Frontend:** Unit tests with Vitest & React Testing Library
   ```bash
   cd frontend
   npm run test
   ```
-- **Coverage:**
-  - Main chat interface (`ChatInterface.jsx`) is tested for rendering, message submission, error handling, and settings toggling.
-  - No direct tests for all other components or hooks yet.
-  - No E2E (Cypress) tests present.
-
-#### Backend
-- Uses [Mocha](https://mochajs.org/) and [Sinon](https://sinonjs.org/):
+- **Backend:** API tests with Mocha & Sinon
   ```bash
   cd backend
   npm test
   ```
-- **Coverage:**
-  - API endpoints (`/api/chat`, `/api/validate-key`, `/api/models`) are tested for success, error, and validation scenarios.
-  - No direct tests for all middleware/utilities in isolation.
-
-#### Summary
-- **Strengths:** Core chat flow and error handling are tested for both frontend and backend.
-- **Limitations:** No full coverage for all components, hooks, or edge cases. No E2E tests. For academic/portfolio purposes, this is sufficient, but more tests are recommended for production.
-
----
-
-## 📝 Manual Test Cases
-
-A comprehensive manual test plan is available in [docs/test_cases.md](docs/test_cases.md). This checklist covers all user actions, features, error cases, demo mode, settings, export, and accessibility. Use it to verify the application works as expected.
+- **Manual Test Plan:** See [docs/test_cases.md](docs/test_cases.md) for comprehensive manual test cases covering all user actions, features, error cases, demo mode, settings, export, and accessibility.
 
 ---
 
@@ -138,12 +152,7 @@ A comprehensive manual test plan is available in [docs/test_cases.md](docs/test_
 
 - **Purpose:** Allows full evaluation of the chat interface without an OpenAI API key.
 - **How to Use:** Toggle "Demo Mode" in the settings panel. All chat features will work with simulated responses.
-- **Scenarios Covered:**
-  - Coding help
-  - General knowledge
-  - Error handling
-  - Different conversation flows
-- **Note:** Demo mode is critical for assignment evaluation and is available on first launch.
+- **Note:** Demo mode always returns the same default response, regardless of the type of input message.
 
 ---
 
@@ -160,18 +169,27 @@ A comprehensive manual test plan is available in [docs/test_cases.md](docs/test_
 - [x] Error handling: User-friendly messages, loading states
 - [x] Quality gates: All core requirements tested and documented
 
+> **For full compliance details and rationale, see [docs/design_choices_and_changes.md](docs/design_choices_and_changes.md).**
+
 ---
 
-## 📖 Known Limitations & Future Improvements
+## 📖 Documentation & Further Reading
 
-- Add more unit and integration tests (components, hooks, backend utilities)
-- Implement E2E tests (Cypress)
-- Add error boundaries for all React components
-- Auto-save settings and chat history (session-based)
-- Improve accessibility (a11y) and ARIA labels
-- Add TypeScript types for stricter type safety
-- Polish UI/UX for edge cases and animations
-- Expand documentation (user guide, deployment)
+- [Design Choices & Changes to Proposal](docs/design_choices_and_changes.md)
+- [Manual Test Cases](docs/test_cases.md)
+- [Vercel Deployment Guide](docs/vercel_deployment_guide.md)
+
+---
+
+## 📦 Submission & Finalization
+
+- **Final submission (Phase 3) must include:**
+  - This repository (all code, docs, and installation instructions)
+  - A 2-page abstract (to be added in `/docs_phase3` before submission)
+  - A screencast video (to be added in `/docs_phase3` before submission)
+  - Zipped folder structure as per assignment requirements
+
+> **See assignment transcript and university guidelines for full submission details.**
 
 ---
 
@@ -184,13 +202,3 @@ Contributions are welcome! For major changes, please open an issue first to disc
 ## 📝 Academic Integrity
 
 This project represents original work completed as part of the IU International University curriculum. All external resources, libraries, and references are properly documented and attributed according to academic standards.
-
----
-
-## 📄 Design Choices & Changes to Proposal
-
-For a detailed record of the initial project proposal, all design choices, and explicit documentation of any changes made in response to feedback, please see:
-
-[docs/design_choices_and_changes.md](docs/design_choices_and_changes.md)
-
-This file fulfills academic requirements for transparency and traceability of project evolution across all phases.

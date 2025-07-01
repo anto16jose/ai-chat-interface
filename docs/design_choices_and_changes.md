@@ -46,11 +46,18 @@ This architecture satisfies all portfolio requirements: frontend-backend communi
 - Clarified in documentation that settings management includes backend communication (API key validation endpoint)
 - Added/expanded test cases and data in the project documentation and test files
 - Updated presentation filename and included suggestions for screencast improvements in project notes
+- **Added 'Export Chat transcript' feature as a new dynamic aspect after Phase 2 feedback.** This feature was not part of the original proposal but was implemented to ensure compliance with the requirement for two dynamic aspects involving frontend-backend communication, as settings management alone was deemed insufficient by the tutor. The export feature allows users to request a chat transcript from the backend, which generates and returns the file in real time, demonstrating dynamic interaction.
 
 ---
 
 ## Changes to Proposal: (Explicit Statement)
 
-All changes made were in response to feedback regarding documentation clarity, diagram standards, and explicit communication of dynamic aspects. No fundamental changes were made to the core technical or functional proposal. The initial concept, architecture, and feature set remain as originally proposed, with improvements in documentation and compliance with academic standards.
+All changes made were in response to feedback regarding documentation clarity, diagram standards, and explicit communication of dynamic aspects. No fundamental changes were made to the core technical or functional proposal, except for the addition of the 'Export Chat transcript' feature as a second dynamic aspect. The initial concept, architecture, and feature set remain as originally proposed, with improvements in documentation and compliance with academic standards.
 
-**If further changes are made in the future, they will be documented in this section.** 
+**If further changes are made in the future, they will be documented in this section.**
+
+---
+
+## Test Cases & Data
+
+A comprehensive set of manual test cases and expected results is provided in [docs/test_cases.md](test_cases.md). This checklist covers all user actions, features, error cases, demo mode, settings, export, and accessibility. Use it to verify the application works as expected. 

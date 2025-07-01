@@ -24,6 +24,9 @@ const router = express.Router();
 const { validateChatRequest, validateKeyRequest } = require('../middleware/validation');
 const { validateApiKey, getChatCompletion, getDemoResponse } = require('../utils/openai');
 
+// In-memory chat history (demo only, resets on server restart)
+const chatHistory = [];
+
 /**
  * POST /api/chat
  * Send a message and get AI response
@@ -167,6 +170,52 @@ router.get('/models', (req, res) => {
       { id: 'gpt-4', name: 'GPT-4' }
     ]
   });
+});
+
+// Patch chat POST to store messages in history
+const originalChatHandler = router.stack.find(r => r.route && r.route.path === '/chat' && r.route.methods.post);
+if (originalChatHandler) {
+  const oldHandler = originalChatHandler.route.stack[0].handle;
+  originalChatHandler.route.stack[0].handle = async (req, res, next) => {
+    try {
+      const { message } = req.body;
+      // Store user message
+      chatHistory.push({ role: 'user', content: message, timestamp: new Date().toISOString() });
+      // Call original handler
+      const send = res.json.bind(res);
+      res.json = (body) => {
+        // Store assistant response
+        if (body && body.content) {
+          chatHistory.push({ role: 'assistant', content: body.content, timestamp: new Date().toISOString() });
+        }
+        send(body);
+      };
+      await oldHandler(req, res, next);
+    } catch (err) {
+      next(err);
+    }
+  };
+}
+
+/**
+ * GET /api/export
+ * Export chat history as a text file
+ *
+ * @route GET /api/export
+ * @description Returns the current chat history as a downloadable text file
+ *
+ * @returns {text/plain} Chat transcript
+ *
+ * @example
+ * // Response: text file download
+ * User: Hello\nAssistant: Hi! How can I help you?\n...
+ */
+router.get('/export', (req, res) => {
+  const lines = chatHistory.map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`);
+  const transcript = lines.join('\n');
+  res.setHeader('Content-Disposition', 'attachment; filename="chat.txt"');
+  res.setHeader('Content-Type', 'text/plain');
+  res.send(transcript);
 });
 
 module.exports = router;

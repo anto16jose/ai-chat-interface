@@ -33,7 +33,7 @@ import { useState } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import SettingsPanel from './SettingsPanel';
-import { Cog6ToothIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Cog6ToothIcon, XMarkIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import useChat from '../hooks/useChat';
 
 const LoadingSpinner = () => (
@@ -120,14 +120,40 @@ const ChatInterface = () => {
         {/* Header Bar */}
         <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm fixed top-0 left-0 w-full z-40">
           <span className="text-2xl font-bold text-blue-700 tracking-tight">GPT Chat</span>
-          {/* Settings button (mobile) */}
-          <button
-            className="md:hidden p-2 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            onClick={() => setDrawerOpen(true)}
-            aria-label="Open settings"
-          >
-            <Cog6ToothIcon className="h-7 w-7 text-blue-600" />
-          </button>
+          <div className="flex items-center space-x-2">
+            {/* Export Chat button */}
+            <button
+              className="p-2 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={async () => {
+                try {
+                  const res = await fetch('/api/export');
+                  const blob = await res.blob();
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'chat.txt';
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                  window.URL.revokeObjectURL(url);
+                } catch (err) {
+                  alert('Failed to export chat.');
+                }
+              }}
+              aria-label="Export chat transcript"
+              title="Export chat transcript"
+            >
+              <ArrowDownTrayIcon className="h-7 w-7 text-blue-600" />
+            </button>
+            {/* Settings button (mobile) */}
+            <button
+              className="md:hidden p-2 rounded-full hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={() => setDrawerOpen(true)}
+              aria-label="Open settings"
+            >
+              <Cog6ToothIcon className="h-7 w-7 text-blue-600" />
+            </button>
+          </div>
         </header>
         {/* Chat area */}
         <main className="flex-1 flex flex-col justify-between bg-gradient-to-br from-white to-blue-50 pt-[72px] md:pt-[72px]">

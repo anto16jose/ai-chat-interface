@@ -93,6 +93,7 @@ FRONTEND_URL=http://localhost:5173
 - Secure API key handling (never exposed to frontend)
 - Error handling and loading states
 - Rate limiting and CORS protection
+- **Export Chat Transcript:** Users can export their current chat session as a downloadable text file. This feature demonstrates dynamic frontend-backend interaction: the frontend requests the transcript from the backend, which generates the file in real time. This satisfies the assignment's requirement for a second dynamic aspect (beyond chat and settings).
 
 ---
 
@@ -142,7 +143,7 @@ FRONTEND_URL=http://localhost:5173
 
 ## ✅ Assignment Compliance Checklist
 
-- [x] Two dynamic aspects: Real-time chat + Settings management
+- [x] Two dynamic aspects: Real-time chat + **Export Chat transcript** (frontend-backend communication)
 - [x] Responsive design: Mobile-first with Tailwind CSS
 - [x] Frontend-backend communication: RESTful API
 - [x] Functioning application: NOT mockups - actually works
@@ -177,3 +178,13 @@ Contributions are welcome! For major changes, please open an issue first to disc
 ## 📝 Academic Integrity
 
 This project represents original work completed as part of the IU International University curriculum. All external resources, libraries, and references are properly documented and attributed according to academic standards.
+
+---
+
+## 📄 Design Choices & Changes to Proposal
+
+For a detailed record of the initial project proposal, all design choices, and explicit documentation of any changes made in response to feedback, please see:
+
+[docs/design_choices_and_changes.md](docs/design_choices_and_changes.md)
+
+This file fulfills academic requirements for transparency and traceability of project evolution across all phases.

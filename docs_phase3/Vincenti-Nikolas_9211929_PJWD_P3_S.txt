@@ -1,0 +1,10 @@
+GitHub Repository Link for AI Chat Interface Project
+
+Student: Nikolas Daniel Vincenti
+Matriculation Number: 9211929
+Course: DLBCSPJWD01 - Project Java and Web Development
+Phase: 3 (Finalization)
+
+Repository URL: https://github.com/NikVince/ai-chat-interface
+
+Live Application: https://ai-chat-interface-nine.vercel.app/

